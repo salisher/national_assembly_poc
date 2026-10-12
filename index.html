@@ -1,0 +1,2488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National Assembly of Pakistan — Secretariat E-Office Suite</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    
+:root {
+    --bg-main: #f1f5f9;
+    --bg-card: #ffffff;
+    --bg-sidebar: #022c22;
+    --sidebar-text: #a7f3d0;
+    --sidebar-active: #059669;
+    --bg-topbar: #064e3b;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border: #e2e8f0;
+    --primary: #047857;
+    --primary-light: #059669;
+    --primary-dark: #022c22;
+    --accent: #0284c7;
+    --input-bg: #ffffff;
+    --badge-bg: #f8fafc;
+    --shadow: 0 4px 12px -2px rgba(15, 23, 42, 0.06);
+    --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    --danger: #b91c1c;
+    --danger-bg: #fef2f2;
+    --warning: #c2410c;
+    --warning-bg: #fff7ed;
+    --success: #15803d;
+    --success-bg: #f0fdf4;
+    --secret-bg: #581c87;
+    --secret-text: #f3e8ff;
+    --note-green: #f0fdf4;
+    --note-green-border: #16a34a;
+}
+
+body.dark-mode {
+    --bg-main: #0b1320;
+    --bg-card: #152033;
+    --bg-sidebar: #011b14;
+    --sidebar-text: #6ee7b7;
+    --sidebar-active: #047857;
+    --bg-topbar: #022c22;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --border: #1e293b;
+    --primary: #10b981;
+    --primary-light: #34d399;
+    --primary-dark: #064e3b;
+    --accent: #38bdf8;
+    --input-bg: #1e293b;
+    --badge-bg: #1e293b;
+    --shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+    --note-green: #064e3b;
+    --note-green-border: #10b981;
+}
+
+* { box-sizing: border-box; font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif; margin: 0; padding: 0; transition: background-color 0.2s, border-color 0.2s, color 0.2s; }
+body { background: var(--bg-main); color: var(--text-main); font-size: 13px; line-height: 1.5; }
+
+.avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #ffffff; }
+.avatar-sm { width: 26px; height: 26px; border-radius: 50%; }
+
+button {
+    cursor: pointer; border: 0; border-radius: 8px; padding: 7px 13px; font-weight: 600; font-size: 12px;
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s ease;
+}
+button:hover { transform: translateY(-1px); opacity: 0.95; }
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-secondary { background: var(--badge-bg); color: var(--text-main); border: 1px solid var(--border); }
+.btn-accent { background: var(--accent); color: #fff; }
+.btn-danger { background: var(--danger-bg); color: var(--danger); border: 1px solid rgba(185, 28, 28, 0.2); }
+.btn-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(21, 128, 61, 0.2); }
+
+input, select, textarea {
+    width: 100%; padding: 8px 12px; border: 1px solid var(--border); border-radius: 8px; margin: 4px 0 12px;
+    font-size: 13px; background: var(--input-bg); color: var(--text-main); outline: none;
+}
+input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15); }
+
+/* LOGIN SCREEN */
+
+.login-wrapper { min-height: 100vh; display: flex; width: 100%; background: var(--bg-main); }
+.login-left {
+    flex: 1.1; background: linear-gradient(135deg, rgba(2, 44, 34, 0.9) 0%, rgba(6, 78, 59, 0.85) 100%), 
+                url('na building.jpg') center/cover no-repeat;
+    display: flex; flex-direction: column; justify-content: space-between; padding: 48px; color: #ffffff;
+}
+.login-left-brand { display: flex; align-items: center; gap: 14px; }
+.login-left-footer { font-size: 11px; opacity: 0.7; }
+.login-divider { width: 1px; background: var(--border); }
+.login-right { flex: 0.9; display: flex; align-items: center; justify-content: center; padding: 40px; background: var(--bg-card); }
+.login-card { width: 100%; max-width: 420px; }
+
+.quick-demo-roles { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; }
+.quick-chip {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 20px; padding: 5px 12px;
+    font-size: 11px; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px; color: var(--text-main);
+}
+.quick-chip:hover { border-color: var(--primary); background: var(--primary); color: #fff; }
+
+/* APP LAYOUT */
+.app-container { display: none; min-height: 100vh; flex-direction: column; }
+.top-bar {
+    height: 64px; background: var(--bg-topbar); color: white; display: flex; align-items: center;
+    justify-content: space-between; padding: 0 24px; position: relative; z-index: 20; box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+.brand-section { display: flex; align-items: center; gap: 12px; }
+.brand-title h2 { font-size: 15px; font-weight: 800; letter-spacing: 0.3px; color: #fff; }
+.brand-title small { font-size: 10px; color: #a7f3d0; opacity: 0.9; display: block; }
+
+.top-actions { display: flex; align-items: center; gap: 14px; }
+.icon-btn { position: relative; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15); color: #fff; width: 36px; height: 36px; border-radius: 8px; font-size: 14px; }
+.icon-btn:hover { background: rgba(255,255,255,0.2); }
+.notif-badge { position: absolute; top: -3px; right: -3px; background: var(--danger); color: #fff; font-size: 9px; font-weight: 800; border-radius: 10px; padding: 2px 5px; }
+
+.body-layout { display: flex; flex: 1; }
+.sidebar {
+    width: 260px; background: var(--bg-sidebar); border-right: 1px solid var(--border); padding: 18px 12px;
+    display: flex; flex-direction: column; gap: 3px; overflow-y: auto; max-height: calc(100vh - 64px);
+}
+.sidebar-category { font-size: 10px; font-weight: 800; text-transform: uppercase; color: #6ee7b7; padding: 10px 10px 4px; opacity: 0.9; letter-spacing: 0.5px; }
+.sidebar button {
+    width: 100%; justify-content: flex-start; background: transparent; color: var(--sidebar-text);
+    padding: 9px 12px; font-size: 12px; border-radius: 8px; font-weight: 600; text-align: left;
+}
+.sidebar button:hover { background: rgba(255,255,255,0.08); color: #ffffff; }
+.sidebar button.active { background: var(--sidebar-active); color: #ffffff !important; }
+.sidebar .badge-count { margin-left: auto; background: rgba(255,255,255,0.2); color: #fff; font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+
+.main-content { flex: 1; padding: 24px; overflow-y: auto; max-height: calc(100vh - 64px); }
+
+/* GRID & CARDS */
+.grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; margin-bottom: 20px; }
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; margin-bottom: 20px; }
+
+.kpi-card { background: var(--bg-card); padding: 18px; border-radius: 12px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+.kpi-card span { font-size: 11px; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+.kpi-card h3 { margin-top: 4px; font-size: 24px; color: var(--primary); font-weight: 800; }
+
+.panel { background: var(--bg-card); padding: 22px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; box-shadow: var(--shadow); }
+.panel-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.panel-header h3 { font-size: 15px; font-weight: 700; color: var(--text-main); }
+
+/* TABLES */
+table { width: 100%; border-collapse: collapse; }
+th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 12px; }
+th { background: var(--badge-bg); color: var(--text-muted); font-weight: 700; text-transform: uppercase; font-size: 10px; letter-spacing: 0.5px; }
+tr:hover { background: var(--badge-bg); }
+
+.badge { padding: 4px 10px; border-radius: 6px; font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px; }
+.badge-approved { background: var(--success-bg); color: var(--success); }
+.badge-pending { background: var(--warning-bg); color: var(--warning); }
+.badge-urgent { background: var(--danger-bg); color: var(--danger); }
+.badge-public { background: #e0f2fe; color: #0369a1; }
+.badge-confidential { background: #fef3c7; color: #92400e; }
+.badge-secret { background: #fee2e2; color: #991b1b; }
+
+/* ROUTING TIMELINE STYLES */
+.desk-location-banner {
+    background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+    color: white; padding: 14px 18px; border-radius: 10px; margin-bottom: 20px;
+    display: flex; align-items: center; justify-content: space-between; box-shadow: var(--shadow);
+}
+.timeline-list { position: relative; padding-left: 24px; border-left: 3px solid var(--border); margin: 16px 0 24px 12px; }
+.timeline-item { position: relative; margin-bottom: 22px; }
+.timeline-item:last-child { margin-bottom: 0; }
+.timeline-icon {
+    position: absolute; left: -36px; top: 0; width: 22px; height: 22px; border-radius: 50%;
+    background: var(--bg-card); border: 3px solid var(--border); display: flex; align-items: center; justify-content: center;
+    font-size: 10px; font-weight: 800;
+}
+.timeline-item.completed .timeline-icon { border-color: var(--success); background: var(--success); color: white; }
+.timeline-item.current .timeline-icon { border-color: var(--accent); background: var(--accent); color: white; animation: pulse 1.5s infinite; }
+.timeline-item.pending .timeline-icon { border-color: var(--text-muted); background: var(--bg-card); }
+
+@keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0.4); } 70% { box-shadow: 0 0 0 8px rgba(2, 132, 199, 0); } 100% { box-shadow: 0 0 0 0 rgba(2, 132, 199, 0); } }
+
+.timeline-card {
+    background: var(--badge-bg); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px;
+}
+.timeline-item.current .timeline-card { border-color: var(--accent); background: rgba(2, 132, 199, 0.05); }
+
+/* PROMPTER DISPLAY MODE */
+.prompter-box { background: #000; color: #00ff66; font-family: monospace; font-size: 22px; line-height: 1.6; padding: 26px; border-radius: 12px; height: 320px; overflow-y: auto; border: 2px solid #00ff66; text-align: left; }
+
+/* MODALS */
+.modal-overlay {
+    position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px;
+}
+.modal-content {
+    background: var(--bg-card); width: 850px; max-width: 95%; max-height: 90vh; overflow-y: auto;
+    border-radius: 14px; padding: 26px; box-shadow: var(--shadow-lg); border: 1px solid var(--border);
+}
+
+.note-sheet-green { background: var(--note-green); border-left: 4px solid var(--note-green-border); padding: 14px; border-radius: 8px; margin-top: 10px; }
+
+/* TOAST ALERT CONTAINER */
+.toast-container { position: fixed; bottom: 24px; right: 24px; display: flex; flex-direction: column; gap: 8px; z-index: 9999; }
+.toast {
+    background: var(--bg-card); color: var(--text-main); border: 1px solid var(--border); border-left: 4px solid var(--primary);
+    padding: 12px 18px; border-radius: 8px; font-size: 12px; font-weight: 600; box-shadow: var(--shadow-lg);
+    animation: slideIn 0.3s ease; display: flex; align-items: center; gap: 8px;
+}
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* NOTIFICATIONS DROPDOWN */
+.notif-dropdown {
+    position: absolute; top: 60px; right: 24px; width: 330px; background: var(--bg-card);
+    border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lg); display: none; z-index: 50; overflow: hidden;
+}
+.notif-item { padding: 12px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--text-main); }
+.notif-item:hover { background: var(--badge-bg); }
+
+.hidden { display: none !important; }
+.chart-box { position: relative; height: 210px; width: 100%; }
+
+/* GREETING CARD PREVIEW CARD */
+.greeting-card-preview {
+    background: linear-gradient(135deg, #022c22 0%, #047857 100%);
+    color: #ffffff; padding: 24px; border-radius: 14px; border: 2px solid #a7f3d0; text-align: center; margin-top: 10px;
+}
+
+/* ================= ENHANCED E-OFFICE FEATURES ================= */
+.feature-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; margin-bottom:20px; }
+.feature-card { background:var(--bg-card); border:1px solid var(--border); border-radius:12px; padding:18px; box-shadow:var(--shadow); }
+.feature-card h4 { font-size:13px; margin-bottom:5px; color:var(--text-main); }
+.feature-card p { color:var(--text-muted); font-size:11px; }
+.progress-track { width:100%; height:8px; background:var(--border); border-radius:20px; overflow:hidden; margin-top:8px; }
+.progress-fill { height:100%; background:var(--primary); border-radius:20px; transition:width .4s ease; }
+.priority-pill { padding:4px 8px; border-radius:999px; font-size:10px; font-weight:800; }
+.priority-urgent { background:var(--danger-bg); color:var(--danger); }
+.priority-high { background:var(--warning-bg); color:var(--warning); }
+.priority-normal { background:var(--success-bg); color:var(--success); }
+.priority-low { background:var(--badge-bg); color:var(--text-muted); }
+.search-command { position:relative; flex:1; max-width:430px; }
+.search-command input { margin:0; padding-left:36px; background:rgba(255,255,255,.1); color:#fff; border-color:rgba(255,255,255,.2); }
+.search-command input::placeholder { color:#d1fae5; }
+.global-search-results { position:absolute; top:46px; left:0; right:0; background:var(--bg-card); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow-lg); z-index:100; display:none; max-height:360px; overflow:auto; }
+.global-search-result { padding:11px 13px; border-bottom:1px solid var(--border); cursor:pointer; color:var(--text-main); }
+.global-search-result:hover { background:var(--badge-bg); }
+.metric-value { font-size:25px; font-weight:800; color:var(--primary); }
+.status-dot { width:8px; height:8px; border-radius:50%; display:inline-block; margin-right:5px; background:var(--success); }
+.status-dot.warn { background:var(--warning); }
+.status-dot.danger { background:var(--danger); }
+.ai-chat { height:360px; overflow:auto; background:var(--badge-bg); border:1px solid var(--border); border-radius:10px; padding:14px; }
+.ai-msg { max-width:82%; padding:10px 12px; border-radius:10px; margin-bottom:10px; font-size:12px; }
+.ai-msg.bot { background:var(--bg-card); border:1px solid var(--border); }
+.ai-msg.user { background:var(--primary); color:#fff; margin-left:auto; }
+.quick-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+.quick-actions button { font-size:11px; }
+.security-score { width:125px; height:125px; border-radius:50%; border:10px solid var(--success); display:flex; align-items:center; justify-content:center; flex-direction:column; margin:auto; }
+.security-score strong { font-size:27px; }
+.security-score small { color:var(--text-muted); }
+.timeline-mini { border-left:2px solid var(--border); padding-left:15px; }
+.timeline-mini-item { margin-bottom:13px; position:relative; }
+.timeline-mini-item:before { content:''; width:8px; height:8px; background:var(--primary); border-radius:50%; position:absolute; left:-20px; top:5px; }
+.kpi-card { transition:transform .2s ease, box-shadow .2s ease; }
+.kpi-card:hover, .feature-card:hover { transform:translateY(-2px); box-shadow:var(--shadow-lg); }
+@media(max-width:900px) {
+    .top-bar { padding:0 12px; }
+    .search-command { display:none; }
+    .sidebar { width:220px; }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- CONFIDENTIAL VAULT LOGIN LOCK -->
+<div id="confidentialLockScreen" style="
+    position:fixed; inset:0; z-index:99999;
+    background:rgba(7,15,28,.97);
+    display:none; align-items:center; justify-content:center;
+    padding:20px;">
+    <div style="
+        width:100%; max-width:430px;
+        background:var(--bg-card);
+        border:1px solid var(--border);
+        border-radius:16px;
+        box-shadow:0 20px 60px rgba(0,0,0,.45);
+        padding:30px;
+        text-align:center;">
+        <div style="
+            width:76px;height:76px;border-radius:50%;
+            margin:0 auto 16px;
+            display:flex;align-items:center;justify-content:center;
+            background:var(--danger-bg);
+            font-size:34px;">🔐</div>
+
+        <h2 style="font-weight:800;color:var(--primary);margin-bottom:7px;">
+            Confidential File Vault
+        </h2>
+        <p style="font-size:12px;color:var(--text-muted);margin-bottom:22px;">
+            Restricted access. Please authenticate to continue.
+        </p>
+
+        <div style="text-align:left;">
+            <label style="font-size:11px;font-weight:700;">Username</label>
+            <input id="confidentialUsername" type="text" placeholder="Enter username" autocomplete="username">
+
+            <label style="font-size:11px;font-weight:700;">Password</label>
+            <input id="confidentialPassword" type="password" placeholder="Enter password" autocomplete="current-password"
+                   onkeydown="if(event.key==='Enter') authenticateConfidentialVault()">
+
+            <div id="confidentialLoginError" style="
+                display:none;color:var(--danger);
+                background:var(--danger-bg);
+                border-radius:8px;padding:9px;margin:10px 0;
+                font-size:11px;">
+            </div>
+
+            <button class="btn-primary" style="width:100%;margin-top:6px;"
+                    onclick="authenticateConfidentialVault()">
+                🔓 Authenticate & Open Vault
+            </button>
+
+            <button class="btn-secondary" style="width:100%;margin-top:8px;"
+                    onclick="closeConfidentialLock()">
+                Cancel
+            </button>
+        </div>
+
+        <div style="
+            margin-top:18px;padding-top:14px;
+            border-top:1px solid var(--border);
+            font-size:10px;color:var(--text-muted);">
+            🔒 Confidentiality controls • Access attempts are logged
+        </div>
+    </div>
+</div>
+
+
+
+<div id="toastContainer" class="toast-container"></div>
+
+<!-- SPLIT-SCREEN LOGIN SCREEN -->
+<div id="loginScreen" class="login-wrapper">
+    <div class="login-left">
+        <div class="login-left-brand">
+            <img src="data:image/jpeg;base64,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" style="width:48px; height:48px; object-fit:contain;" alt="National Assembly of Pakistan Logo">
+            <div>
+                <h1 style="font-size:18px; font-weight:800; letter-spacing:0.5px;">NATIONAL ASSEMBLY OF PAKISTAN</h1>
+                <p style="font-size:11px; opacity:0.85;">Secretariat E-Office Suite</p>
+            </div>
+        </div>
+
+        <div style="max-width:480px;">
+            <h2 style="font-size:32px; font-weight:800; line-height:1.2; margin-bottom:16px;">Legislative E-Governance & File Routing</h2>
+            <p style="font-size:13px; opacity:0.9; line-height:1.6;">
+                Complete workflow visibility for every secretariat file across all administrative levels.
+            </p>
+        </div>
+
+        <div class="login-left-footer">
+            © 2026 National Assembly Secretariat • Islamic Republic of Pakistan
+        </div>
+    </div>
+
+    <div class="login-divider"></div>
+
+    <div class="login-right">
+        <div class="login-card">
+            <div style="text-align:center; margin-bottom:24px;">
+                <img src="data:image/jpeg;base64,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" style="width:70px; height:70px; object-fit:contain; margin-bottom:8px;" alt="National Assembly of Pakistan Logo">
+                <h2 style="font-size:20px; font-weight:800; color:var(--text-main);">Executive Portal Access</h2>
+                <p style="color:var(--text-muted); font-size:12px; margin-top:2px;">Select user credentials to authenticate session</p>
+            </div>
+
+            <div style="font-size:11px; font-weight:700; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px;">Quick Role Selection:</div>
+            <div class="quick-demo-roles">
+                <span class="quick-chip" onclick="fillCredentials('speaker@na.gov.pk', 'pass123')">
+                    <img src="Sardar Ayaz Sadiq.webp" class="avatar-sm"> Speaker
+                </span>
+                <span class="quick-chip" onclick="fillCredentials('secgen@na.gov.pk', 'pass123')">
+                    <img src="Sec Gen.jpeg" class="avatar-sm"> Sec General
+                </span>
+                <span class="quick-chip" onclick="fillCredentials('specsec@na.gov.pk', 'pass123')">
+                    <img src="SSECSI.jpg" class="avatar-sm"> Special Sec SI
+                </span>
+                <span class="quick-chip" onclick="fillCredentials('js.admin@na.gov.pk', 'pass123')">
+                    <img src="" class="avatar-sm"> JS Admin
+                </span>
+                <span class="quick-chip" onclick="fillCredentials('so.leg@na.gov.pk', 'pass123')">
+                    <img src="" class="avatar-sm"> SO Legislation
+                </span>
+                <span class="quick-chip" onclick="fillCredentials('dg.it/ciso@na.gov.pk', 'pass123')">
+                    <img src="DG IT.jpg" class="avatar-sm"> DG IT/CISO
+                </span>
+            </div>
+
+            <form onsubmit="event.preventDefault(); login();">
+                <label style="font-size:11px; font-weight:700;">Official Secretariat Email</label>
+                <input type="email" id="loginUsername" value="speaker@na.gov.pk" required>
+
+                <label style="font-size:11px; font-weight:700;">Security Password</label>
+                <input type="password" id="loginPassword" value="pass123" required>
+
+                <button type="submit" class="btn-primary" style="width:100%; padding:12px; margin-top:10px; font-size:13px;">
+                    🔒 Authenticate & Launch Portal
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MAIN APP CONTAINER -->
+<div id="appContainer" class="app-container">
+    
+    <header class="top-bar">
+        <div class="brand-section">
+            <img src="data:image/jpeg;base64,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" style="width:42px; height:42px; object-fit:contain;" alt="National Assembly of Pakistan Logo">
+            <div class="brand-title">
+                <h2>National Assembly Secretariat</h2>
+                <small>Islamic Republic of Pakistan • E-Governance Suite</small>
+            </div>
+        </div>
+
+        <div class="top-actions">
+            <div class="search-command">
+                <span style="position:absolute; left:12px; top:8px; z-index:2;">🔎</span>
+                <input id="globalSearchInput" type="text" placeholder="Search files, staff, modules..." oninput="globalSearch(this.value)" onfocus="globalSearch(this.value)">
+                <div id="globalSearchResults" class="global-search-results"></div>
+            </div>
+            <div style="position:relative;">
+                <button class="icon-btn" title="Notifications" onclick="toggleNotifDropdown()">
+                    🔔 <span id="notifBadge" class="notif-badge">3</span>
+                </button>
+                <div id="notifDropdown" class="notif-dropdown">
+                    <div style="padding:10px 14px; background:var(--badge-bg); font-weight:700; border-bottom:1px solid var(--border); display:flex; justify-content:space-between; color:var(--text-main);">
+                        <span>System Notifications</span>
+                        <small style="color:var(--primary); cursor:pointer;" onclick="clearNotifs()">Clear</small>
+                    </div>
+                    <div id="notifList">
+                        <div class="notif-item">📍 File FILE-2026-801 dispatched to Special Secretary.</div>
+                        <div class="notif-item">🎯 Direction Overdue: Audit Escalation.</div>
+                        <div class="notif-item">🤝 Meeting Request from Diplomatic Envoy.</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; background:rgba(255,255,255,0.12); padding:4px 12px; border-radius:30px; border:1px solid rgba(255,255,255,0.2);">
+                <img id="userAvatarHeader" src="" class="avatar">
+                <div style="text-align:left;">
+                    <div id="userDisplayRole" style="font-weight:700; font-size:12px; line-height:1.2; color:#fff;"></div>
+                    <small id="userDisplayBranch" style="color:#a7f3d0; font-size:10px;"></small>
+                </div>
+            </div>
+
+            <button class="btn-secondary" style="padding:6px 12px; font-size:11px;" onclick="logout()">Exit</button>
+        </div>
+    </header>
+
+    <div class="body-layout">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <button id="nav-dashboard" class="active" onclick="switchTab('dashboard')">📊 Executive Overview</button>
+            <button id="nav-inbox" onclick="switchTab('inbox')">📥 Desk Inbox <span id="inboxCountBadge" class="badge-count">0</span></button>
+            
+            <div class="sidebar-category">Core Workflows (Mod 1-3)</div>
+            <button id="nav-files" onclick="switchTab('files')">📁 Master File Registry & Dispatch (Mod 1)</button>
+            <button id="nav-tracking" onclick="switchTab('tracking')">🧭 File Movement Control</button>
+            <button id="nav-archive" onclick="switchTab('archive')">🗄️ File Archive</button>
+            <button id="nav-create" onclick="switchTab('create')">➕ Originate New File (Mod 1)</button>
+            <button id="nav-directions" onclick="switchTab('directions')">🎯 Speaker Directions (Mod 2)</button>
+            <button id="nav-meetings" onclick="switchTab('meetings')">🤝 Meetings & Visitors (Mod 3)</button>
+
+            <div class="sidebar-category">Engagements & Comms (Mod 4-6)</div>
+            <button id="nav-schedule" onclick="switchTab('schedule')">📅 Calendar & Briefing (Mod 4)</button>
+            <button id="nav-speeches" onclick="switchTab('speeches')">🎤 Speeches & Prompter (Mod 5)</button>
+            <button id="nav-calls" onclick="switchTab('calls')">📞 Call Register (Mod 6)</button>
+
+            <div class="sidebar-category">Remote, Media & Dignitaries (Mod 7-9)</div>
+            <button id="nav-remote" onclick="switchTab('remote')">⚡ Remote / WFH Sign (Mod 7)</button>
+            <button id="nav-media" onclick="switchTab('media')">📰 Media Digest & PR (Mod 8)</button>
+            <button id="nav-occasions" onclick="switchTab('occasions')">✉️ Greeting Cards (Mod 9)</button>
+
+            <div class="sidebar-category">Analytics & Administration</div>
+            <button id="nav-analytics" onclick="switchTab('analytics')">📈 Analytics & Reports</button>
+            <button id="nav-staff" onclick="switchTab('staff')">👥 Staff Directory</button>
+
+            <div class="sidebar-category">Intelligence & Security</div>
+            <button id="nav-ai" onclick="switchTab('ai')">🤖 Secretariat AI Assistant</button>
+            <button id="nav-security" onclick="switchTab('security')">🛡️ Security Centre</button>
+
+            <div class="sidebar-category">Security & Governance</div>
+            <button id="nav-audit" onclick="switchTab('audit')">📜 Secretariat Audit Log (Mod 10)</button>
+            <button id="nav-confidential" onclick="openConfidentialVault()">🔒 Confidential Vault</button>
+            <button id="nav-messages" onclick="switchTab('messages')">💬 Encrypted Messaging</button>
+            <button id="nav-settings" onclick="switchTab('settings')">⚙️ Portal Settings</button>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main-content">
+
+            <!-- TAB: DASHBOARD -->
+            <section id="tab-dashboard">
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-weight:800; color:var(--primary);" id="dashboardGreeting">Executive Secretariat Telemetry</h2>
+                    <span style="color:var(--text-muted); font-size:12px;">Real-time legislative file movement and official dispatch monitoring</span>
+                </div>
+
+                <div class="grid-4">
+                    <div class="kpi-card"><span>Total Active Files</span><h3 id="kpiTotal">0</h3></div>
+                    <div class="kpi-card"><span>Files In Transit / Dispatch</span><h3 id="kpiInTransit" style="color:var(--accent)">0</h3></div>
+                    <div class="kpi-card"><span>Speaker Directions Active</span><h3 id="kpiDirections" style="color:var(--warning)">0</h3></div>
+                    <div class="kpi-card"><span>Assented / Approved</span><h3 id="kpiApproved" style="color:var(--success)">0</h3></div>
+                </div>
+
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header"><h3>File Stage Distribution</h3></div>
+                        <div class="chart-box"><canvas id="statusChart"></canvas></div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h3>Desk Delay Bottlenecks (Days)</h3></div>
+                        <div class="chart-box"><canvas id="delayChart"></canvas></div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="panel-header"><h3>📌 Live File Location Summary</h3></div>
+                    <div id="liveLocationTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: DESK INBOX -->
+            <section id="tab-inbox" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Desk Inbox (Files At Your Desk)</h3>
+                        <span style="font-size:11px; color:var(--text-muted);">Files awaiting your review or minute entry</span>
+                    </div>
+                    <div id="inboxTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: MASTER FILE REGISTRY & DISPATCH (MODULE 1) -->
+            <section id="tab-files" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 1: Master Secretariat File Registry & Routing Trail</h3>
+                        <button class="btn-primary" onclick="switchTab('create')">➕ Originate New File</button>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:11px; margin-bottom:12px;">
+                        Click "📍 Track Timeline" on any file to view its exact movement history across Section Officer, Joint Secretary, Special Secretary, and Speaker desks.
+                    </p>
+                    <input type="text" id="fileSearchInput" placeholder="🔍 Filter files by ID, Subject, Current Desk, or Officer..." onkeyup="filterMasterFiles()" style="margin-bottom:16px;">
+                    <div id="filesTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: ORIGINATE NEW FILE -->
+            <section id="tab-create" class="hidden">
+                <div class="panel" style="max-width: 720px;">
+                    <div class="panel-header"><h3>Module 1: Originate Official Secretariat File</h3></div>
+                    
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                        <div>
+                            <label style="font-weight:700;">Generated File Number</label>
+                            <input type="text" id="newFileNumber" readonly style="font-family:monospace; font-weight:bold; background:var(--badge-bg);">
+                        </div>
+                        <div>
+                            <label style="font-weight:700;">Originating Branch</label>
+                            <select id="newBranch">
+                                <option value="Legislation">Legislation Branch</option>
+                                <option value="Finance">Finance Branch</option>
+                                <option value="Admin">Admin Branch</option>
+                                <option value="Committees">Committees Branch</option>
+                                <option value="IT">IT Branch</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label style="font-weight:700;">File Subject Title</label>
+                    <input type="text" id="newSubject" placeholder="e.g., Procurement of High-Security Digital Consoles">
+
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                        <div>
+                            <label style="font-weight:700;">Initial Forwarding Destination</label>
+                            <select id="newRecipient">
+                                <option value="Deputy Secretary">Deputy Secretary</option>
+                                <option value="Joint Secretary">Joint Secretary</option>
+                                <option value="Additional Secretary">Additional Secretary</option>
+                                <option value="Special Secretary">Special Secretary</option>
+                                <option value="Secretary General">Secretary General</option>
+                                <option value="Speaker">Speaker</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-weight:700;">Security Classification</label>
+                            <select id="newClassification">
+                                <option value="Public">Public</option>
+                                <option value="Confidential">Confidential</option>
+                                <option value="Secret">Secret</option>
+                                <option value="Top Secret">Top Secret</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <label style="font-weight:700;">Initiation Note (Green Sheet Entry)</label>
+                    <textarea id="newNote" rows="4" placeholder="Write official green sheet minute entry..."></textarea>
+
+                    <button class="btn-primary" onclick="createNewFile()">⚡ Originate & Dispatch File</button>
+                </div>
+            </section>
+
+            <!-- TAB: SPEAKER DIRECTIONS (MODULE 2) -->
+            <section id="tab-directions" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 2: Speaker's Executive Direction Dashboard</h3>
+                        <button class="btn-primary" onclick="addSpeakerDirectionPrompt()">+ Log New Direction</button>
+                    </div>
+                    <div id="directionsTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: MEETINGS & VISITORS (MODULE 3) -->
+            <section id="tab-meetings" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 3: Meetings & Diplomatic Visitors</h3>
+                        <button class="btn-primary" onclick="registerVisitorPrompt()">+ Register & Screen Visitor</button>
+                    </div>
+                    <div id="meetingsTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: CALENDAR & BRIEFING (MODULE 4) -->
+            <section id="tab-schedule" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 4: Calendar & Daily Morning Briefing</h3>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn-primary" onclick="addScheduleEventPrompt()">+ Add Schedule Event</button>
+                            <button class="btn-accent" onclick="generateDailyBriefing()">☀️ Generate Morning Summary</button>
+                        </div>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:14px;">Active engagements and schedule timeline configured for Speaker Secretariat.</p>
+                    <div id="scheduleTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: SPEECHES & PROMPTER (MODULE 5) -->
+            <section id="tab-speeches" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 5: Speeches, Addresses & Smart Prompter</h3>
+                        <button class="btn-primary" onclick="addNewSpeechPrompt()">+ Prepare New Address</button>
+                    </div>
+                    <div id="speechesTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: CALL REGISTER (MODULE 6) -->
+            <section id="tab-calls" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 6: Telephone Call Registry</h3>
+                        <button class="btn-primary" onclick="logNewCallPrompt()">+ Log Call</button>
+                    </div>
+                    <div id="callsTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: REMOTE APPROVALS (MODULE 7) -->
+            <section id="tab-remote" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 7: Remote / Work-From-Home Sign-off</h3>
+                    </div>
+                    <div id="remoteTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: MEDIA & PRESS RELEASES (MODULE 8) -->
+            <section id="tab-media" class="hidden">
+                <!-- Quick Stats Bar -->
+                <div class="grid-4">
+                    <div class="kpi-card">
+                        <span>Pending Review</span>
+                        <h3 id="statPendingPR">0</h3>
+                    </div>
+                    <div class="kpi-card">
+                        <span>Approved Today</span>
+                        <h3 id="statApprovedPR" style="color:var(--success);">0</h3>
+                    </div>
+                    <div class="kpi-card">
+                        <span>Needs Revision</span>
+                        <h3 id="statRejectedPR" style="color:var(--danger);">0</h3>
+                    </div>
+                    <div class="kpi-card">
+                        <span>Total Drafts</span>
+                        <h3 id="statTotalPR">0</h3>
+                    </div>
+                </div>
+
+                <!-- Main Approvals Panel -->
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>📰 Executive Press Release Approvals</h3>
+                        <button class="btn-primary" onclick="openNewPRModal()">+ Draft New Release</button>
+                    </div>
+
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ref ID</th>
+                                <th>Headline / Subject</th>
+                                <th>Department</th>
+                                <th>Target Release Date</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pressReleaseTableBody">
+                            <!-- Dynamic Rows Inserted by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: GREETING CARDS (MODULE 9) -->
+            <section id="tab-occasions" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 9: Special Occasion Greeting Cards</h3>
+                        <button class="btn-primary" onclick="openNewOccasionModal()">+ Create New Greeting Card</button>
+                    </div>
+                    <div id="occasionsTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: AUDIT LOG (MODULE 10) -->
+            <section id="tab-audit" class="hidden">
+                <div class="panel">
+                    <div class="panel-header">
+                        <h3>Module 10: Executive Audit Trail & System Activity</h3>
+                        <button class="btn-secondary" onclick="renderAuditLog()">🔄 Refresh Audit Trail</button>
+                    </div>
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:14px;">Immutable event logs recording all file approvals, user logins, signature events, and dispatch actions.</p>
+                    <div id="auditTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: CONFIDENTIAL VAULT -->
+            <section id="tab-confidential" class="hidden">
+                <div class="panel">
+                    <div class="panel-header"><h3>🔒 Confidential Vault</h3></div>
+                    <div id="confidentialTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: MESSAGING -->
+            <section id="tab-messages" class="hidden">
+                <div class="panel">
+                    <div class="panel-header"><h3>💬 Encrypted Messaging Channel</h3></div>
+                    <p style="color:var(--text-muted); font-size:12px; margin-bottom:14px;">Instant secure communication channel between secretariat executives.</p>
+                    
+                    <div style="display:flex; gap:12px; margin-bottom:16px;">
+                        <select id="msgRecipient" style="max-width:240px; margin:0;">
+                            <option value="Speaker">Hon. Speaker</option>
+                            <option value="Secretary General">Secretary General</option>
+                            <option value="Special Secretary">Special Secretary</option>
+                            <option value="Joint Secretary">Joint Secretary</option>
+                        </select>
+                        <input type="text" id="msgText" placeholder="Type secure encrypted memo..." style="margin:0;">
+                        <button class="btn-primary" onclick="sendEncryptedMessage()">🔒 Send Memo</button>
+                    </div>
+
+                    <div id="msgLogBox" class="note-sheet-green" style="min-height:160px; max-height:260px; overflow-y:auto; background:var(--badge-bg); border-left-color:var(--accent);">
+                        <div style="font-size:11px; color:var(--text-muted); margin-bottom:6px;">Encrypted Log:</div>
+                        <div style="margin-bottom:6px;"><strong>[10:15 AM] Hon. Speaker:</strong> Please prepare the briefing sheet for the Commonwealth Delegation.</div>
+                        <div style="margin-bottom:6px;"><strong>[10:18 AM] Secretary General:</strong> Acknowledged. Joint Secretary Admin assigned.</div>
+                    </div>
+                </div>
+            </section>
+
+
+            <!-- TAB: FILE MOVEMENT CONTROL -->
+            <section id="tab-tracking" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">🧭 File Movement Control Centre</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Live workflow health, priorities, deadlines and routing performance</span>
+                </div>
+                <div class="grid-4">
+                    <div class="kpi-card"><span>Urgent Files</span><h3 id="trackUrgent">0</h3></div>
+                    <div class="kpi-card"><span>Overdue / At Risk</span><h3 id="trackOverdue" style="color:var(--danger);">0</h3></div>
+                    <div class="kpi-card"><span>In Transit</span><h3 id="trackTransit">0</h3></div>
+                    <div class="kpi-card"><span>Avg. Routing Health</span><h3 id="trackHealth" style="color:var(--success);">0%</h3></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Priority Queue</h3><button class="btn-secondary" onclick="renderTracking()">↻ Refresh</button></div>
+                    <div id="trackingTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: ARCHIVE -->
+            <section id="tab-archive" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">🗄️ Secretariat File Archive</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Completed, accepted and rejected official files</span>
+                </div>
+                <div class="grid-4">
+                    <div class="kpi-card"><span>Total Archived</span><h3 id="archiveTotal">0</h3></div>
+                    <div class="kpi-card"><span>Accepted / Approved</span><h3 id="archiveApproved" style="color:var(--success);">0</h3></div>
+                    <div class="kpi-card"><span>Rejected</span><h3 id="archiveRejected" style="color:var(--danger);">0</h3></div>
+                    <div class="kpi-card"><span>Completed Files</span><h3 id="archiveCompleted" style="color:var(--accent);">0</h3></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>📁 Archived Files</h3></div>
+                    <input type="text" id="archiveSearchInput" placeholder="🔍 Search archive..." onkeyup="filterArchiveFiles()">
+                    <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                        <button class="btn-secondary" onclick="setArchiveFilter('All')">📁 All</button>
+                        <button class="btn-success" onclick="setArchiveFilter('Approved')">✅ Accepted</button>
+                        <button class="btn-danger" onclick="setArchiveFilter('Rejected')">❌ Rejected</button>
+                    </div>
+                    <div id="archiveTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: ANALYTICS -->
+            <section id="tab-analytics" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">📈 Analytics & Executive Reports</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Operational intelligence for files, departments and secretariat performance</span>
+                </div>
+                <div class="feature-grid">
+                    <div class="feature-card"><h4>Workflow Completion</h4><div class="metric-value" id="analyticsCompletion">0%</div><div class="progress-track"><div id="analyticsProgress" class="progress-fill" style="width:0%"></div></div></div>
+                    <div class="feature-card"><h4>Files Requiring Attention</h4><div class="metric-value" id="analyticsAttention">0</div><p>Priority or overdue cases</p></div>
+                    <div class="feature-card"><h4>Department Load</h4><div class="metric-value" id="analyticsDepartments">0</div><p>Active branches</p></div>
+                    <div class="feature-card"><h4>Audit Events</h4><div class="metric-value" id="analyticsAudit">0</div><p>Recorded system actions</p></div>
+                </div>
+                <div class="grid-2">
+                    <div class="panel"><div class="panel-header"><h3>📊 File Status Distribution</h3></div><div class="chart-box"><canvas id="analyticsStatusChart"></canvas></div></div>
+                    <div class="panel"><div class="panel-header"><h3>🏢 Branch Workload</h3></div><div class="chart-box"><canvas id="branchChart"></canvas></div></div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Executive Report</h3><button class="btn-primary" onclick="generateExecutiveReport()">🖨️ Generate Report</button></div>
+                    <div id="executiveReportBox" class="note-sheet-green">Select “Generate Report” to prepare a concise executive performance brief.</div>
+                </div>
+            </section>
+
+            <!-- TAB: STAFF -->
+            <section id="tab-staff" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">👥 Secretariat Staff Directory</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Officer roles, branches, availability and workload</span>
+                </div>
+                <div class="panel">
+                    <input id="staffSearch" placeholder="🔍 Search officer, role or branch..." oninput="renderStaff()">
+                    <div id="staffTableBox"></div>
+                </div>
+            </section>
+
+            <!-- TAB: AI ASSISTANT -->
+            <section id="tab-ai" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">🤖 Secretariat AI Assistant</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Prototype intelligence layer for file summaries, routing questions and executive briefings</span>
+                </div>
+                <div class="grid-2">
+                    <div class="panel">
+                        <div class="panel-header"><h3>AI Conversation</h3><span class="badge badge-approved">Prototype</span></div>
+                        <div id="aiChatBox" class="ai-chat">
+                            <div class="ai-msg bot">Assalamu Alaikum. I am the Secretariat AI prototype. I can summarise files, identify priority cases, explain workflow status and prepare an executive briefing.</div>
+                        </div>
+                        <div class="quick-actions">
+                            <button class="btn-secondary" onclick="askAI('Give me an executive briefing')">Executive Briefing</button>
+                            <button class="btn-secondary" onclick="askAI('Which files are urgent?')">Urgent Files</button>
+                            <button class="btn-secondary" onclick="askAI('Summarise the current files')">Summarise Files</button>
+                            <button class="btn-secondary" onclick="askAI('Which branches have the most work?')">Branch Workload</button>
+                        </div>
+                        <div style="display:flex;gap:8px;margin-top:12px;">
+                            <input id="aiInput" placeholder="Ask the Secretariat AI...">
+                            <button class="btn-primary" onclick="sendAIMessage()">Send</button>
+                        </div>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h3>✨ AI File Summary</h3></div>
+                        <select id="aiFileSelect" onchange="summariseSelectedFile()"></select>
+                        <div id="aiSummaryBox" class="note-sheet-green">Select a file to generate a structured prototype summary.</div>
+                        <div style="margin-top:15px;">
+                            <h4 style="margin-bottom:8px;">AI Recommendations</h4>
+                            <ul id="aiRecommendations" style="padding-left:18px;color:var(--text-muted);font-size:11px;"></ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB: SECURITY CENTRE -->
+            <section id="tab-security" class="hidden">
+                <div style="margin-bottom:20px;">
+                    <h2 style="font-weight:800;color:var(--primary);">🛡️ Security Centre</h2>
+                    <span style="color:var(--text-muted);font-size:12px;">Prototype security posture, access controls and governance checks</span>
+                </div>
+                <div class="grid-2">
+                    <div class="panel" style="text-align:center;">
+                        <h3 style="margin-bottom:15px;">Security Posture</h3>
+                        <div class="security-score"><strong id="securityScore">92</strong><small>/ 100</small></div>
+                        <p id="securityLabel" style="margin-top:12px;font-weight:700;color:var(--success);">GOOD • No critical alerts</p>
+                    </div>
+                    <div class="panel">
+                        <div class="panel-header"><h3>Governance Checks</h3></div>
+                        <div id="securityChecks"></div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header"><h3>Access & Security Events</h3><button class="btn-danger" onclick="simulateSecurityAlert()">⚠️ Simulate Alert</button></div>
+                    <div id="securityEvents"></div>
+                </div>
+            </section>
+
+            <!-- TAB: SETTINGS -->
+            <section id="tab-settings" class="hidden">
+                <div class="panel" style="max-width:650px;">
+                    <div class="panel-header"><h3>⚙️ Executive Portal Settings</h3></div>
+                    
+                    <!-- Profile Picture Section -->
+                    <div style="display:flex; align-items:center; gap:20px; margin-bottom:24px; padding-bottom:20px; border-bottom:1px solid var(--border);">
+                        <img id="settingsPfpPreview" src="" class="avatar" style="width:72px; height:72px;">
+                        <div>
+                            <label style="font-weight:700; display:block; margin-bottom:6px;">Profile Picture</label>
+                            <input type="file" id="pfpFileInput" accept="image/*" onchange="handlePfpUpload(event)" style="display:none;">
+                            <button class="btn-secondary" onclick="document.getElementById('pfpFileInput').click()">📷 Upload New Photo</button>
+                            <small style="display:block; color:var(--text-muted); margin-top:4px;">JPG or PNG under 2MB</small>
+                        </div>
+                    </div>
+
+                    <!-- Account Information Form -->
+                    <h4 style="font-size:13px; font-weight:800; margin-bottom:10px;">Account Profile</h4>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                        <div>
+                            <label style="font-weight:700;">Full Name / Designation</label>
+                            <input type="text" id="settingsNameInput">
+                        </div>
+                        <div>
+                            <label style="font-weight:700;">Secretariat Branch</label>
+                            <input type="text" id="settingsBranchInput">
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="updateProfileDetails()" style="margin-bottom:24px;">💾 Save Profile Changes</button>
+
+                    <!-- Security / Password Change -->
+                    <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; border-top:1px solid var(--border); padding-top:16px;">Security & Password</h4>
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                        <div>
+                            <label style="font-weight:700;">Current Password</label>
+                            <input type="password" id="settingsCurrentPass">
+                        </div>
+                        <div>
+                            <label style="font-weight:700;">New Password</label>
+                            <input type="password" id="settingsNewPass">
+                        </div>
+                    </div>
+                    <button class="btn-secondary" onclick="changePassword()" style="margin-bottom:24px;">🔑 Update Password</button>
+
+                    <!-- Theme Preferences -->
+                    <h4 style="font-size:13px; font-weight:800; margin-bottom:10px; border-top:1px solid var(--border); padding-top:16px;">Interface Theme</h4>
+                    <div style="display:flex; gap:10px;">
+                        <button class="btn-secondary" onclick="setTheme('light')">☀️ Light Mode</button>
+                        <button class="btn-secondary" onclick="setTheme('dark')">🌙 Dark Mode</button>
+                    </div>
+                </div>
+            </section>
+
+        <div style="text-align:center;color:var(--text-muted);font-size:10px;padding:8px;">Prototype feature layer • Front-end demonstration only</div>
+        </main>
+    </div>
+</div>
+
+<!-- ================= MODALS SECTION ================= -->
+
+<!-- FILE TIMELINE TRACKING MODAL -->
+<div id="trackModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
+            <div>
+                <h3 id="trackFileNumber" style="font-size:16px; font-weight:800; color:var(--primary);"></h3>
+                <small id="trackFileSubject" style="color:var(--text-muted); font-weight:600;"></small>
+            </div>
+            <button class="btn-secondary" onclick="closeModal('trackModal')">✕ Close</button>
+        </div>
+
+        <div class="desk-location-banner">
+            <div>
+                <span style="font-size:10px; text-transform:uppercase; letter-spacing:0.5px; opacity:0.85;">Current Desk Location</span>
+                <h3 id="trackCurrentDesk" style="font-size:18px; font-weight:800; margin-top:2px;"></h3>
+            </div>
+            <span id="trackStatusBadge" class="badge badge-approved" style="font-size:11px;">In Transit</span>
+        </div>
+
+        <h4 style="font-size:13px; font-weight:800; margin-bottom:12px;">📍 Detailed File Dispatch & Routing History</h4>
+        
+        <div class="timeline-list" id="timelineList"></div>
+
+        <div style="border-top:1px solid var(--border); padding-top:16px; display:flex; justify-content:space-between; align-items:center;">
+            <div style="display:flex; gap:10px; align-items:center; flex:1; max-width:500px;">
+                <select id="forwardNextDesk" style="margin:0;">
+                    <option value="Deputy Secretary">Forward to: Deputy Secretary</option>
+                    <option value="Joint Secretary">Forward to: Joint Secretary</option>
+                    <option value="Additional Secretary">Forward to: Additional Secretary</option>
+                    <option value="Special Secretary">Forward to: Special Secretary</option>
+                    <option value="Secretary General">Forward to: Secretary General</option>
+                    <option value="Speaker">Forward to: Speaker</option>
+                </select>
+                <input type="text" id="forwardRemark" placeholder="Optional minute remark..." style="margin:0;">
+            </div>
+            <button class="btn-primary" onclick="dispatchFileToNextStage()">↗️ Dispatch File</button>
+        </div>
+    </div>
+</div>
+
+<!-- FILE DETAIL / MINUTE MODAL -->
+<div id="fileModal" class="modal-overlay">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
+            <h3 id="modalFileNumber" style="font-size:16px; font-weight:800; color:var(--primary);"></h3>
+            <button class="btn-secondary" onclick="closeModal('fileModal')">✕ Close</button>
+        </div>
+        <h4 id="modalFileSubject" style="font-size:14px; font-weight:700; margin-bottom:8px;"></h4>
+        
+        <div class="note-sheet-green">
+            <h4 style="color:var(--success); font-weight:800;">📝 Green Sheet Initiation Note</h4>
+            <p id="modalGreenNote" style="margin-top:6px; font-size:12.5px;"></p>
+        </div>
+
+        <div style="margin-top:20px; border-top:1px solid var(--border); padding-top:14px;">
+            <label style="font-weight:700;">Minute Remarks Entry</label>
+            <textarea id="modalNewMinute" rows="3" placeholder="Write official minute remarks..."></textarea>
+            
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                <button class="btn-danger" onclick="closeModal('fileModal'); showToast('File returned with remarks.');">❌ Return File</button>
+                <button class="btn-success" onclick="approveFileAction()">✅ Assent & Approve</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SMART PROMPTER MODAL -->
+<div id="prompterModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:700px; background:#111; color:#fff;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <h3 style="font-size:16px; font-weight:800; color:#00ff66;">🎤 Smart Teleprompter</h3>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-secondary" style="background:#222; color:#fff;" onclick="scrollPrompter(-100)">⬆️ Scroll Up</button>
+                <button class="btn-secondary" style="background:#222; color:#fff;" onclick="scrollPrompter(100)">⬇️ Scroll Down</button>
+                <button class="btn-secondary" style="background:#222; color:#fff;" onclick="closeModal('prompterModal')">✕ Close</button>
+            </div>
+        </div>
+        <div class="prompter-box" id="prompterContentText"></div>
+    </div>
+</div>
+
+<!-- MODAL: REGISTER VISITOR (MODULE 3) -->
+<div id="visitorModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="panel-header">
+            <h3>🤝 Register & Screen Visitor</h3>
+            <button class="btn-secondary" onclick="closeModal('visitorModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Visitor Full Name</label>
+        <input type="text" id="visName" placeholder="e.g. H.E. Ambassador of UAE">
+        <label style="font-weight:700;">Organization / Embassy</label>
+        <input type="text" id="visOrg" placeholder="e.g. Embassy of UAE, Islamabad">
+        <label style="font-weight:700;">Meeting With</label>
+        <select id="visHost">
+            <option value="Hon. Speaker">Hon. Speaker</option>
+            <option value="Secretary General">Secretary General</option>
+            <option value="Special Secretary">Special Secretary</option>
+            <option value="Joint Secretary Admin">Joint Secretary Admin</option>
+        </select>
+        <label style="font-weight:700;">Scheduled Time</label>
+        <input type="text" id="visTime" value="2026-09-15 02:30 PM">
+        
+        <button class="btn-primary" onclick="saveVisitorRecord()" style="margin-top:10px;">🛡️ Screen & Pass Security Clearance</button>
+    </div>
+</div>
+
+<!-- MODAL: ADD SPEAKER DIRECTION (MODULE 2) -->
+<div id="directionModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="panel-header">
+            <h3>🎯 Log Speaker's Directive</h3>
+            <button class="btn-secondary" onclick="closeModal('directionModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Directive Instruction</label>
+        <textarea id="dirText" rows="3" placeholder="Enter executive instruction..."></textarea>
+        <label style="font-weight:700;">Assigned Secretariat Officer</label>
+        <select id="dirAssigned">
+            <option value="JS Admin">Joint Secretary Admin</option>
+            <option value="SO Legislation">SO Legislation</option>
+            <option value="Special Secretary">Special Secretary</option>
+            <option value="Finance Secretariat">Finance Secretariat</option>
+        </select>
+        <label style="font-weight:700;">Target Compliance Date</label>
+        <input type="date" id="dirDueDate" value="2026-09-20">
+
+        <button class="btn-primary" onclick="saveDirectionRecord()" style="margin-top:10px;">⚡ Issue Direction</button>
+    </div>
+</div>
+
+<!-- MODAL: ADD SCHEDULE EVENT (MODULE 4) -->
+<div id="scheduleModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="panel-header">
+            <h3>📅 Schedule Engagement</h3>
+            <button class="btn-secondary" onclick="closeModal('scheduleModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Engagement Title</label>
+        <input type="text" id="schedTitle" placeholder="e.g., Standing Committee on Finance">
+        <label style="font-weight:700;">Location / Chamber</label>
+        <input type="text" id="schedLoc" placeholder="e.g. Committee Room 2, Parliament House">
+        <label style="font-weight:700;">Date & Time</label>
+        <input type="text" id="schedTime" value="2026-09-16 11:00 AM">
+
+        <button class="btn-primary" onclick="saveScheduleRecord()" style="margin-top:10px;">📅 Confirm Engagement</button>
+    </div>
+</div>
+
+<!-- MODAL: DAILY MORNING BRIEFING (MODULE 4) -->
+<div id="briefingModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:650px;">
+        <div class="panel-header">
+            <h3>☀️ Morning Executive Briefing Sheet</h3>
+            <button class="btn-secondary" onclick="closeModal('briefingModal')">✕</button>
+        </div>
+        <div class="note-sheet-green" style="font-size:13px; line-height:1.7;" id="briefingSheetContent"></div>
+    </div>
+</div>
+
+<!-- MODAL: DRAFT NEW SPEECH (MODULE 5) -->
+<div id="speechModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:600px;">
+        <div class="panel-header">
+            <h3>🎤 Prepare New Keynote / Address</h3>
+            <button class="btn-secondary" onclick="closeModal('speechModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Speech / Address Title</label>
+        <input type="text" id="spTitle" placeholder="e.g. Address on National Resilience">
+        <label style="font-weight:700;">Event Venue</label>
+        <input type="text" id="spVenue" placeholder="e.g. Main Assembly Chamber">
+        <label style="font-weight:700;">Full Speech Transcript</label>
+        <textarea id="spText" rows="6" placeholder="Bismillah ir-Rahman ir-Rahim..."></textarea>
+
+        <button class="btn-primary" onclick="saveSpeechRecord()">💾 Save Speech & Teleprompter Queue</button>
+    </div>
+</div>
+
+<!-- MODAL: LOG CALL (MODULE 6) -->
+<div id="callModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:550px;">
+        <div class="panel-header">
+            <h3>📞 Log Telephone Conversation</h3>
+            <button class="btn-secondary" onclick="closeModal('callModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Caller Name & Designation</label>
+        <input type="text" id="callCaller" placeholder="e.g. Federal Minister for Interior">
+        <label style="font-weight:700;">Call Type</label>
+        <select id="callType">
+            <option value="Incoming">Incoming Call</option>
+            <option value="Outgoing">Outgoing Call</option>
+        </select>
+        <label style="font-weight:700;">Linked Secretariat File Ref</label>
+        <input type="text" id="callFile" value="FILE-2026-801">
+
+        <button class="btn-primary" onclick="saveCallRecord()">📞 Save Call Log</button>
+    </div>
+</div>
+
+<!-- MODAL: PRESS RELEASE REVIEW & APPROVAL (MODULE 8) -->
+<div id="prReviewModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:650px;">
+        <div class="panel-header">
+            <h3 id="modalPrTitle">Review Press Release Draft</h3>
+            <button class="btn-secondary" onclick="closePrModal()">✕</button>
+        </div>
+        <div style="margin-bottom: 12px; font-size:11px; color:var(--text-muted);" id="modalPrMeta"></div>
+        <div id="modalPrBody" class="note-sheet-green" style="background:var(--badge-bg); border-left-color:var(--primary); padding:16px; min-height:140px; white-space:pre-wrap; margin-bottom:20px;"></div>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px;">
+            <button class="btn-danger" onclick="updatePrStatus('Rejected')">❌ Reject / Request Edit</button>
+            <div style="margin-left:auto; display:flex; gap:10px;">
+                <button class="btn-secondary" onclick="closePrModal()">Cancel</button>
+                <button class="btn-success" onclick="updatePrStatus('Approved')">✅ Approve & Publish</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL: DRAFT PRESS RELEASE (MODULE 8) -->
+<div id="prNewModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:650px;">
+        <div class="panel-header">
+            <h3>📰 Draft Press Release</h3>
+            <button class="btn-secondary" onclick="closeModal('prNewModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Headline / Subject</label>
+        <input type="text" id="newPrTitle" placeholder="e.g., Speaker Meets Delegation of Commonwealth Parliamentary Association">
+        <label style="font-weight:700;">Department</label>
+        <input type="text" id="newPrDept" value="Public Relations Secretariat">
+        <label style="font-weight:700;">Target Release Date</label>
+        <input type="date" id="newPrDate" value="2026-09-15">
+        <label style="font-weight:700;">Press Release Content Text</label>
+        <textarea id="newPrContent" rows="5" placeholder="Official press draft details..."></textarea>
+
+        <button class="btn-primary" onclick="saveNewPressRelease()">📤 Submit for Executive Approval</button>
+    </div>
+</div>
+
+<!-- MODAL: GREETING CARD (MODULE 9) -->
+<div id="occasionModal" class="modal-overlay">
+    <div class="modal-content" style="max-width:600px;">
+        <div class="panel-header">
+            <h3>✉️ Create Greeting Card</h3>
+            <button class="btn-secondary" onclick="closeModal('occasionModal')">✕</button>
+        </div>
+        <label style="font-weight:700;">Recipient Dignitary / Embassy</label>
+        <input type="text" id="occRecipient" placeholder="e.g. H.E. Ambassador of Saudi Arabia">
+        <label style="font-weight:700;">Occasion Event Title</label>
+        <input type="text" id="occTitle" placeholder="e.g. National Day felicitations">
+        <label style="font-weight:700;">Greeting Message Text</label>
+        <textarea id="occMessage" rows="3" placeholder="Extending warmest felicitations on behalf of the National Assembly..."></textarea>
+
+        <div class="greeting-card-preview" id="cardPreviewBox">
+            <h4 style="font-size:16px; font-weight:800; color:#a7f3d0;" id="prevOccTitle">National Day Felicitations</h4>
+            <p style="font-size:12px; margin-top:8px; opacity:0.9;" id="prevOccMsg">Extending warmest felicitations on behalf of the National Assembly...</p>
+            <div style="font-size:11px; margin-top:14px; text-transform:uppercase; letter-spacing:1px; color:#6ee7b7;">Honorable Speaker • National Assembly of Pakistan</div>
+        </div>
+
+        <button class="btn-primary" onclick="saveOccasionRecord()" style="margin-top:16px; width:100%;">✉️ Dispatch Official Greeting Card</button>
+    </div>
+</div>
+
+<script>
+// USERS DATABASE
+const USERS = {
+    'speaker@na.gov.pk': { name: 'Hon. Speaker', role: 'Speaker', branch: 'Executive Office', avatar: 'Sardar Ayaz Sadiq.webp' },
+    'secgen@na.gov.pk': { name: 'Secretary General', role: 'Secretary General', branch: 'Executive Secretariat', avatar: 'Sec Gen.jpeg' },
+    'specsec@na.gov.pk': { name: 'Special Secretary', role: 'Special Secretary', branch: 'Secretariat Admin', avatar: 'SSECSI.jpg' },
+    'js.admin@na.gov.pk': { name: 'JS Admin', role: 'Joint Secretary', branch: 'Admin Branch', avatar: 'https://i.pravatar.cc/100?img=47' },
+    'so.leg@na.gov.pk': { name: 'SO Legislation', role: 'Section Officer', branch: 'Legislation Branch', avatar: 'https://i.pravatar.cc/100?img=11' }
+};
+
+// MASTER FILES WITH TRACKING ROUTING TRAILS
+let filesData = [
+    {
+        id: 'FILE-2026-801',
+        branch: 'Legislation',
+        subject: 'National Digital Security Bill 2026',
+        currentDesk: 'Special Secretary',
+        classification: 'Public',
+        status: 'In Transit',
+        delays: 2,
+        greenNote: 'Draft legislation presented for secretarial clearance and house schedule placement.',
+        trail: [
+            { stage: 'Section Officer (Legislation)', officer: 'SO Legislation', timestamp: '2026-09-09 09:30 AM', action: 'Originated & Dispatched', status: 'completed', remark: 'Initial draft prepared.' },
+            { stage: 'Deputy Secretary', officer: 'DS Legislation', timestamp: '2026-09-09 02:15 PM', action: 'Reviewed & Forwarded', status: 'completed', remark: 'Legal clauses reviewed.' },
+            { stage: 'Joint Secretary', officer: 'JS Admin', timestamp: '2026-09-10 11:00 AM', action: 'Approved & Forwarded', status: 'completed', remark: 'Recommended for executive clearance.' },
+            { stage: 'Special Secretary', officer: 'Special Secretary', timestamp: '2026-09-11 08:45 AM', action: 'Under Review', status: 'current', remark: 'Examining parliamentary impacts.' },
+            { stage: 'Secretary General', officer: 'Secretary General', timestamp: 'Pending', action: 'Awaiting Receipt', status: 'pending', remark: 'Next stage.' },
+            { stage: 'Speaker Office', officer: 'Hon. Speaker', timestamp: 'Pending', action: 'Awaiting Final Assent', status: 'pending', remark: 'Final stage.' }
+        ]
+    },
+    {
+        id: 'FILE-2026-802',
+        branch: 'Finance',
+        subject: 'Procurement of Hardware Consoles for Chamber',
+        currentDesk: 'Speaker',
+        classification: 'Confidential',
+        status: 'Approved',
+        delays: 0,
+        greenNote: 'Financial sanction request for high-security chamber console upgrades.',
+        trail: [
+            { stage: 'Section Officer (Finance)', officer: 'SO Finance', timestamp: '2026-09-08 10:00 AM', action: 'Originated', status: 'completed', remark: 'Estimates verified.' },
+            { stage: 'Deputy Secretary Finance', officer: 'DS Finance', timestamp: '2026-09-08 03:20 PM', action: 'Forwarded', status: 'completed', remark: 'Budget available under Head-A03.' },
+            { stage: 'Special Secretary', officer: 'Special Secretary', timestamp: '2026-09-09 01:10 PM', action: 'Forwarded', status: 'completed', remark: 'Recommended.' },
+            { stage: 'Speaker Office', officer: 'Hon. Speaker', timestamp: '2026-09-10 10:00 AM', action: 'Assented & Approved', status: 'completed', remark: 'Approved as requested.' }
+        ]
+    },
+    {
+        id: 'FILE-2026-803',
+        branch: 'Admin',
+        subject: 'Executive Staff Re-allocation Guidelines',
+        currentDesk: 'Joint Secretary',
+        classification: 'Public',
+        status: 'In Transit',
+        delays: 4,
+        greenNote: 'Administrative shuffling of secretariat support officers.',
+        trail: [
+            { stage: 'Section Officer (Admin)', officer: 'SO Admin', timestamp: '2026-09-07 11:00 AM', action: 'Originated', status: 'completed', remark: 'Staff list compiled.' },
+            { stage: 'Joint Secretary', officer: 'JS Admin', timestamp: '2026-09-08 09:15 AM', action: 'Under Review', status: 'current', remark: 'Reviewing duty rotations.' }
+        ]
+    }
+];
+
+// OTHER MODULE DATABASES
+let directionsData = [
+    { id: 'DIR-01', direction: 'Submit expenditure audit report for digital upgrade', assignedTo: 'JS Admin', dueDate: '2026-09-14', status: 'In-Progress' }
+];
+
+let meetingsData = [
+    { id: 'MTG-101', visitor: 'H.E. Ambassador of China', type: 'Diplomat', time: '2026-09-15 11:00 AM', status: 'Screened & Scheduled' }
+];
+
+let scheduleData = [
+    { id: 'SCH-01', title: 'Chamber Sitting & Legislative Session', location: 'Main Assembly Hall', time: '2026-09-14 10:00 AM' }
+];
+
+let speechesData = [
+    { id: 'SPCH-01', title: 'Keynote Address: Commonwealth Parliamentary Conference', event: 'Main Chamber', text: 'Honorable Parliamentarians, Distinguished Guests, Assalamu Alaikum. It is a distinct privilege to address this august assembly...' }
+];
+
+let callLogsData = [
+    { id: 'CALL-501', caller: 'Federal Minister for Finance', type: 'Incoming', time: '09:40 AM', linkedFile: 'FILE-2026-802' }
+];
+
+let remoteFilesData = [
+    { id: 'FILE-2026-801', title: 'National Digital Security Bill 2026', urgentMsg: 'Awaiting urgent WFH signature approval' }
+];
+
+let pressReleases = [
+    {
+        id: "PR-2026-001",
+        title: "National Infrastructure Project Expansion Announcement",
+        dept: "Public Relations Secretariat",
+        date: "2026-09-15",
+        status: "Pending",
+        content: "The Secretariat is pleased to announce a strategic expansion of regional infrastructure projects aimed at improving inter-city connectivity and digital governance frameworks starting Q4 2026."
+    },
+    {
+        id: "PR-2026-002",
+        title: "Q3 Fiscal Transparency & Audit Report Summary",
+        dept: "Finance Secretariat",
+        date: "2026-09-12",
+        status: "Pending",
+        content: "An executive briefing on the audited accounts for Q3 indicates a 14% efficiency improvement in inter-departmental budget utilization."
+    }
+];
+
+let occasionsData = [
+    { id: 'CARD-10', recipient: 'H.E. Ambassador of Saudi Arabia', title: 'National Day Felicitations', status: 'Dispatched' }
+];
+
+let auditLogsData = [
+    { time: '2026-09-13 09:12 AM', user: 'Hon. Speaker', action: 'Approved File FILE-2026-802', ip: '10.0.1.45', flag: 'Normal' },
+    { time: '2026-09-13 08:30 AM', user: 'SO Legislation', action: 'Originated File FILE-2026-801', ip: '10.0.2.11', flag: 'Normal' }
+];
+
+let currentUser = null;
+let currentTrackingFileId = null;
+let activePrId = null;
+let statusChartInst = null;
+let delayChartInst = null;
+
+// AUTHENTICATION
+function fillCredentials(email, pass) {
+    document.getElementById('loginUsername').value = email;
+    document.getElementById('loginPassword').value = pass;
+}
+
+function login() {
+    const email = document.getElementById('loginUsername').value;
+    if (!USERS[email]) {
+        showToast('Invalid Secretariat Email!', 'danger');
+        return;
+    }
+    currentUser = USERS[email];
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('appContainer').style.display = 'flex';
+
+    document.getElementById('userAvatarHeader').src = currentUser.avatar;
+    document.getElementById('userDisplayRole').innerText = currentUser.name;
+    document.getElementById('userDisplayBranch').innerText = currentUser.branch;
+
+    logAuditEvent(`User Authentication Success as ${currentUser.name}`);
+    showToast(`Authenticated as ${currentUser.name}`);
+    initPortal();
+}
+
+function logout() {
+    logAuditEvent(`User Logout`);
+    currentUser = null;
+    document.getElementById('appContainer').style.display = 'none';
+    document.getElementById('loginScreen').style.display = 'flex';
+}
+
+function initPortal() {
+    generateNewFileNumber();
+    renderDashboard();
+    renderInbox();
+    renderMasterFiles();
+    renderDirections();
+    renderMeetings();
+    renderSchedule();
+    renderSpeeches();
+    renderCallLogs();
+    renderRemoteApprovals();
+    renderPressReleases();
+    renderOccasions();
+    renderAuditLog();
+    renderConfidentialVault();
+}
+
+function switchTab(tabId) {
+    document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.main-content > section').forEach(s => s.classList.add('hidden'));
+
+    const activeBtn = document.getElementById(`nav-${tabId}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    const activeSection = document.getElementById(`tab-${tabId}`);
+    if (activeSection) activeSection.classList.remove('hidden');
+
+    if (tabId === 'dashboard') renderDashboard();
+    if (tabId === 'settings') loadUserSettings();
+    if (tabId === 'media') renderPressReleases();
+    if (tabId === 'audit') renderAuditLog();
+}
+
+// DASHBOARD
+function renderDashboard() {
+    document.getElementById('kpiTotal').innerText = filesData.length;
+    document.getElementById('kpiInTransit').innerText = filesData.filter(f => f.status === 'In Transit').length;
+    document.getElementById('kpiDirections').innerText = directionsData.length;
+    document.getElementById('kpiApproved').innerText = filesData.filter(f => f.status === 'Approved').length;
+
+    renderLiveLocationTable();
+    initCharts();
+}
+
+function renderLiveLocationTable() {
+    let html = `<table><thead><tr><th>File ID</th><th>Subject Title</th><th>Current Desk Location</th><th>Status</th><th>Routing Action</th></tr></thead><tbody>`;
+    filesData.forEach(f => {
+        html += `<tr>
+            <td><b>${f.id}</b></td>
+            <td>${f.subject}</td>
+            <td><span class="badge badge-public">📍 ${f.currentDesk}</span></td>
+            <td><span class="badge badge-${f.status==='Approved'?'approved':'pending'}">${f.status}</span></td>
+            <td><button class="btn-primary" style="padding:4px 9px; font-size:11px;" onclick="trackFileTimeline('${f.id}')">📍 Track Timeline</button></td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('liveLocationTableBox').innerHTML = html;
+}
+
+function initCharts() {
+    if (statusChartInst) statusChartInst.destroy();
+    if (delayChartInst) delayChartInst.destroy();
+
+    const ctx1 = document.getElementById('statusChart').getContext('2d');
+    statusChartInst = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: ['Assented/Approved', 'In Transit across Desks'],
+            datasets: [{ data: [filesData.filter(f => f.status === 'Approved').length, filesData.filter(f => f.status === 'In Transit').length], backgroundColor: ['#15803d', '#0284c7'] }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+
+    const ctx2 = document.getElementById('delayChart').getContext('2d');
+    delayChartInst = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: filesData.map(f => f.id),
+            datasets: [{ label: 'Desk Retention (Days)', data: filesData.map(f => f.delays), backgroundColor: '#047857' }]
+        },
+        options: { responsive: true, maintainAspectRatio: false }
+    });
+}
+
+// MASTER FILE REGISTRY & TRACKING TIMELINE
+function renderMasterFiles() {
+    let html = `<table><thead><tr><th>File ID</th><th>Branch</th><th>Subject Title</th><th>Current Desk Location</th><th>Classification</th><th>Tracking & Actions</th></tr></thead><tbody>`;
+    filesData.forEach(f => {
+        html += `<tr>
+            <td><b>${f.id}</b></td>
+            <td>${f.branch}</td>
+            <td>${f.subject}</td>
+            <td><span class="badge badge-public">📍 ${f.currentDesk}</span></td>
+            <td><span class="badge badge-${f.classification.toLowerCase().replace(' ', '')}">${f.classification}</span></td>
+            <td style="display:flex; gap:6px;">
+                <button class="btn-primary" style="padding:4px 8px; font-size:11px;" onclick="trackFileTimeline('${f.id}')">📍 Track Timeline</button>
+                <button class="btn-secondary" style="padding:4px 8px; font-size:11px;" onclick="openFileModal('${f.id}')">Minutes</button>
+            </td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('filesTableBox').innerHTML = html;
+}
+
+function renderInbox() {
+    const myFiles = filesData.filter(f => currentUser.role === 'Speaker' || f.currentDesk === currentUser.role);
+    document.getElementById('inboxCountBadge').innerText = myFiles.length;
+
+    let html = `<table><thead><tr><th>File ID</th><th>Subject</th><th>Classification</th><th>Current Location</th><th>Action</th></tr></thead><tbody>`;
+    myFiles.forEach(f => {
+        html += `<tr>
+            <td><b>${f.id}</b></td>
+            <td>${f.subject}</td>
+            <td><span class="badge badge-${f.classification.toLowerCase().replace(' ', '')}">${f.classification}</span></td>
+            <td><span class="badge badge-approved">At Your Desk</span></td>
+            <td><button class="btn-primary" style="padding:4px 8px; font-size:11px;" onclick="trackFileTimeline('${f.id}')">Inspect & Forward</button></td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('inboxTableBox').innerHTML = html;
+}
+
+// TIMELINE ENGINE (RENDER FILE DISPATCH TRAIL)
+function trackFileTimeline(fileId) {
+    const f = filesData.find(item => item.id === fileId);
+    if (!f) return;
+    currentTrackingFileId = fileId;
+
+    document.getElementById('trackFileNumber').innerText = f.id;
+    document.getElementById('trackFileSubject').innerText = f.subject;
+    document.getElementById('trackCurrentDesk').innerText = f.currentDesk + " Desk";
+    document.getElementById('trackStatusBadge').innerText = f.status;
+
+    let timelineHtml = '';
+    f.trail.forEach((step, idx) => {
+        timelineHtml += `
+            <div class="timeline-item ${step.status}">
+                <div class="timeline-icon">${step.status === 'completed' ? '✓' : (step.status === 'current' ? '📍' : (idx + 1))}</div>
+                <div class="timeline-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <strong style="font-size:13px; color:var(--text-main);">${step.stage}</strong>
+                        <code style="font-size:10px; color:var(--text-muted);">${step.timestamp}</code>
+                    </div>
+                    <div style="font-size:11px; color:var(--primary); font-weight:700; margin:2px 0;">Officer: ${step.officer} • Status: ${step.action}</div>
+                    <p style="font-size:11px; color:var(--text-muted);">${step.remark || 'No remark logged.'}</p>
+                </div>
+            </div>
+        `;
+    });
+
+    document.getElementById('timelineList').innerHTML = timelineHtml;
+    document.getElementById('trackModal').style.display = 'flex';
+}
+
+function dispatchFileToNextStage() {
+    const f = filesData.find(item => item.id === currentTrackingFileId);
+    if (!f) return;
+
+    const nextDesk = document.getElementById('forwardNextDesk').value;
+    const remark = document.getElementById('forwardRemark').value.trim() || 'Forwarded in routine course.';
+
+    f.currentDesk = nextDesk;
+    if (nextDesk === 'Speaker') f.status = 'Awaiting Assent';
+
+    const currentStep = f.trail.find(t => t.status === 'current');
+    if (currentStep) {
+        currentStep.status = 'completed';
+        currentStep.action = 'Forwarded';
+    }
+
+    f.trail.push({
+        stage: nextDesk + ' Office',
+        officer: `${currentUser.name} (${currentUser.role})`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        action: 'Received at Desk',
+        status: 'current',
+        remark: remark
+    });
+
+    logAuditEvent(`Dispatched File ${f.id} to ${nextDesk}`);
+    showToast(`File ${f.id} successfully forwarded to ${nextDesk}!`);
+    document.getElementById('forwardRemark').value = '';
+    trackFileTimeline(f.id);
+    renderDashboard();
+    renderMasterFiles();
+    renderInbox();
+}
+
+// ORIGINATE FILE
+function generateNewFileNumber() {
+    const rand = Math.floor(100 + Math.random() * 900);
+    document.getElementById('newFileNumber').value = `FILE-2026-${rand}`;
+}
+
+function createNewFile() {
+    const id = document.getElementById('newFileNumber').value;
+    const branch = document.getElementById('newBranch').value;
+    const subject = document.getElementById('newSubject').value.trim();
+    const recipient = document.getElementById('newRecipient').value;
+    const classification = document.getElementById('newClassification').value;
+    const note = document.getElementById('newNote').value.trim();
+
+    if (!subject || !note) {
+        showToast('Please enter subject title and initiation note sheet!', 'danger');
+        return;
+    }
+
+    const newFile = {
+        id, branch, subject, currentDesk: recipient, classification, status: 'In Transit', delays: 0, greenNote: note,
+        trail: [
+            { stage: `${currentUser.role} (${branch})`, officer: currentUser.name, timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }), action: 'Originated & Dispatched', status: 'completed', remark: note },
+            { stage: `${recipient} Office`, officer: recipient, timestamp: 'Just Now', action: 'Received at Desk', status: 'current', remark: 'Awaiting minute entry.' }
+        ]
+    };
+
+    filesData.unshift(newFile);
+    logAuditEvent(`Originated File ${id}`);
+    showToast(`File ${id} originated and dispatched to ${recipient}!`);
+    generateNewFileNumber();
+    document.getElementById('newSubject').value = '';
+    document.getElementById('newNote').value = '';
+    switchTab('files');
+}
+
+// MODULE 2: SPEAKER DIRECTIONS
+function renderDirections() {
+    let html = `<table><thead><tr><th>Dir ID</th><th>Instruction</th><th>Assigned Officer</th><th>Due Date</th><th>Status</th></tr></thead><tbody>`;
+    directionsData.forEach(d => {
+        html += `<tr><td><b>${d.id}</b></td><td>${d.direction}</td><td>${d.assignedTo}</td><td><code>${d.dueDate}</code></td><td><span class="badge badge-approved">${d.status}</span></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('directionsTableBox').innerHTML = html;
+}
+
+function addSpeakerDirectionPrompt() {
+    document.getElementById('directionModal').style.display = 'flex';
+}
+
+function saveDirectionRecord() {
+    const text = document.getElementById('dirText').value.trim();
+    const assigned = document.getElementById('dirAssigned').value;
+    const due = document.getElementById('dirDueDate').value;
+
+    if (!text) { showToast('Please enter direction text!', 'danger'); return; }
+
+    const newDir = { id: `DIR-0${directionsData.length + 1}`, direction: text, assignedTo: assigned, dueDate: due, status: 'In-Progress' };
+    directionsData.unshift(newDir);
+    logAuditEvent(`Issued Speaker Direction ${newDir.id}`);
+    showToast('Speaker Direction logged and assigned!');
+    closeModal('directionModal');
+    renderDirections();
+}
+
+// MODULE 3: MEETINGS & VISITORS
+function renderMeetings() {
+    let html = `<table><thead><tr><th>Mtg ID</th><th>Visitor</th><th>Category / Org</th><th>Scheduled Time</th><th>Security Clearance</th></tr></thead><tbody>`;
+    meetingsData.forEach(m => {
+        html += `<tr><td><b>${m.id}</b></td><td>${m.visitor}</td><td>${m.type}</td><td>${m.time}</td><td><span class="badge badge-approved">${m.status}</span></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('meetingsTableBox').innerHTML = html;
+}
+
+function registerVisitorPrompt() {
+    document.getElementById('visitorModal').style.display = 'flex';
+}
+
+function saveVisitorRecord() {
+    const name = document.getElementById('visName').value.trim();
+    const org = document.getElementById('visOrg').value.trim();
+    const host = document.getElementById('visHost').value;
+    const time = document.getElementById('visTime').value;
+
+    if (!name || !org) { showToast('Please fill all visitor details!', 'danger'); return; }
+
+    const newMtg = { id: `MTG-${101 + meetingsData.length}`, visitor: name, type: org, time: time, status: 'Screened & Scheduled' };
+    meetingsData.unshift(newMtg);
+    logAuditEvent(`Registered Diplomatic Visitor ${name}`);
+    showToast('Visitor registered and cleared by security!');
+    closeModal('visitorModal');
+    renderMeetings();
+}
+
+// MODULE 4: CALENDAR & MORNING BRIEFING
+function renderSchedule() {
+    let html = `<table><thead><tr><th>ID</th><th>Engagement / Session Title</th><th>Location</th><th>Date & Time</th></tr></thead><tbody>`;
+    scheduleData.forEach(s => {
+        html += `<tr><td><b>${s.id}</b></td><td>${s.title}</td><td>${s.location}</td><td><code>${s.time}</code></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('scheduleTableBox').innerHTML = html;
+}
+
+function addScheduleEventPrompt() {
+    document.getElementById('scheduleModal').style.display = 'flex';
+}
+
+function saveScheduleRecord() {
+    const title = document.getElementById('schedTitle').value.trim();
+    const loc = document.getElementById('schedLoc').value.trim();
+    const time = document.getElementById('schedTime').value;
+
+    if (!title) { showToast('Please enter event title!', 'danger'); return; }
+
+    scheduleData.unshift({ id: `SCH-0${scheduleData.length + 1}`, title, location: loc, time });
+    showToast('Engagement added to executive schedule!');
+    closeModal('scheduleModal');
+    renderSchedule();
+}
+
+function generateDailyBriefing() {
+    let content = `<strong>EXECUTIVE MORNING BRIEFING — ${new Date().toLocaleDateString()}</strong><br><br>`;
+    content += `• <strong>Pending High-Priority Files:</strong> ${filesData.filter(f=>f.status==='In Transit').length} files in secretarial transit.<br>`;
+    content += `• <strong>Scheduled Visitor Delegations:</strong> ${meetingsData.length} diplomatic/official meetings today.<br>`;
+    content += `• <strong>Active Speaker Directives:</strong> ${directionsData.length} directives pending departmental compliance.<br>`;
+    content += `• <strong>Chamber Engagements:</strong> ${scheduleData[0] ? scheduleData[0].title : 'No sessions scheduled.'}`;
+
+    document.getElementById('briefingSheetContent').innerHTML = content;
+    document.getElementById('briefingModal').style.display = 'flex';
+}
+
+// MODULE 5: SPEECHES & PROMPTER
+function renderSpeeches() {
+    let html = `<table><thead><tr><th>ID</th><th>Title</th><th>Event Venue</th><th>Action</th></tr></thead><tbody>`;
+    speechesData.forEach(s => {
+        html += `<tr><td><b>${s.id}</b></td><td>${s.title}</td><td>${s.event}</td><td><button class="btn-accent" style="padding:4px 8px; font-size:11px;" onclick="launchPrompter('${s.id}')">📺 Teleprompter</button></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('speechesTableBox').innerHTML = html;
+}
+
+function addNewSpeechPrompt() {
+    document.getElementById('speechModal').style.display = 'flex';
+}
+
+function saveSpeechRecord() {
+    const title = document.getElementById('spTitle').value.trim();
+    const venue = document.getElementById('spVenue').value.trim();
+    const text = document.getElementById('spText').value.trim();
+
+    if (!title || !text) { showToast('Please enter title and transcript!', 'danger'); return; }
+
+    speechesData.unshift({ id: `SPCH-0${speechesData.length + 1}`, title, event: venue, text });
+    showToast('Keynote speech saved to Teleprompter queue!');
+    closeModal('speechModal');
+    renderSpeeches();
+}
+
+function launchPrompter(id) {
+    const s = speechesData.find(item => item.id === id);
+    if (!s) return;
+    document.getElementById('prompterContentText').innerText = s.text;
+    document.getElementById('prompterModal').style.display = 'flex';
+}
+
+function scrollPrompter(amount) {
+    document.getElementById('prompterContentText').scrollTop += amount;
+}
+
+// MODULE 6: CALL REGISTER
+function renderCallLogs() {
+    let html = `<table><thead><tr><th>ID</th><th>Caller</th><th>Type</th><th>Time</th><th>Linked File</th></tr></thead><tbody>`;
+    callLogsData.forEach(c => {
+        html += `<tr><td><b>${c.id}</b></td><td>${c.caller}</td><td><span class="badge badge-public">${c.type}</span></td><td>${c.time}</td><td><code>${c.linkedFile}</code></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('callsTableBox').innerHTML = html;
+}
+
+function logNewCallPrompt() {
+    document.getElementById('callModal').style.display = 'flex';
+}
+
+function saveCallRecord() {
+    const caller = document.getElementById('callCaller').value.trim();
+    const type = document.getElementById('callType').value;
+    const file = document.getElementById('callFile').value.trim();
+
+    if (!caller) { showToast('Please enter caller name!', 'danger'); return; }
+
+    callLogsData.unshift({ id: `CALL-${501 + callLogsData.length}`, caller, type, time: new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}), linkedFile: file });
+    showToast('Call record saved in official register!');
+    closeModal('callModal');
+    renderCallLogs();
+}
+
+// MODULE 7: REMOTE WFH SIGN-OFF
+function renderRemoteApprovals() {
+    let html = `<table><thead><tr><th>File Ref</th><th>Title / Subject</th><th>Urgency Note</th><th>Digital Signature Action</th></tr></thead><tbody>`;
+    remoteFilesData.forEach(rf => {
+        html += `<tr>
+            <td><b>${rf.id}</b></td>
+            <td>${rf.title}</td>
+            <td><span class="badge badge-urgent">${rf.urgentMsg}</span></td>
+            <td><button class="btn-success" style="padding:4px 8px; font-size:11px;" onclick="remoteSignAction('${rf.id}')">⚡ Apply Digital E-Sign</button></td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('remoteTableBox').innerHTML = html;
+}
+
+function remoteSignAction(id) {
+    const pin = prompt("Enter your 4-digit Executive Security PIN to authorize E-Signature:");
+    if (pin === "1234" || pin) {
+        logAuditEvent(`Remote WFH E-Signature Applied to ${id}`);
+        showToast(`Digital E-Signature applied to ${id}! File assented remotely.`);
+        remoteFilesData = remoteFilesData.filter(r => r.id !== id);
+        renderRemoteApprovals();
+    }
+}
+
+// MODULE 8: PRESS RELEASES
+function renderPressReleases() {
+    const tbody = document.getElementById('pressReleaseTableBody');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    let pending = 0, approved = 0, rejected = 0;
+
+    pressReleases.forEach(pr => {
+        if (pr.status === 'Pending') pending++;
+        if (pr.status === 'Approved') approved++;
+        if (pr.status === 'Rejected') rejected++;
+
+        let badgeClass = 'badge-pending';
+        if (pr.status === 'Approved') badgeClass = 'badge-approved';
+        if (pr.status === 'Rejected') badgeClass = 'badge-urgent';
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><strong>${pr.id}</strong></td>
+            <td>${pr.title}</td>
+            <td>${pr.dept}</td>
+            <td>${pr.date}</td>
+            <td><span class="badge ${badgeClass}">${pr.status}</span></td>
+            <td>
+                <button class="btn-secondary" onclick="reviewPr('${pr.id}')">👁️ Review</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+
+    if (document.getElementById('statPendingPR')) document.getElementById('statPendingPR').innerText = pending;
+    if (document.getElementById('statApprovedPR')) document.getElementById('statApprovedPR').innerText = approved;
+    if (document.getElementById('statRejectedPR')) document.getElementById('statRejectedPR').innerText = rejected;
+    if (document.getElementById('statTotalPR')) document.getElementById('statTotalPR').innerText = pressReleases.length;
+}
+
+function openNewPRModal() {
+    document.getElementById('prNewModal').style.display = 'flex';
+}
+
+function saveNewPressRelease() {
+    const title = document.getElementById('newPrTitle').value.trim();
+    const dept = document.getElementById('newPrDept').value.trim();
+    const date = document.getElementById('newPrDate').value;
+    const content = document.getElementById('newPrContent').value.trim();
+
+    if (!title || !content) { showToast('Please fill press release title and content!', 'danger'); return; }
+
+    pressReleases.unshift({ id: `PR-2026-00${pressReleases.length + 1}`, title, dept, date, status: 'Pending', content });
+    logAuditEvent(`Drafted Press Release PR-2026-00${pressReleases.length}`);
+    showToast('Press release draft submitted for approval!');
+    closeModal('prNewModal');
+    renderPressReleases();
+}
+
+function reviewPr(prId) {
+    const pr = pressReleases.find(item => item.id === prId);
+    if (!pr) return;
+
+    activePrId = prId;
+    document.getElementById('modalPrTitle').innerText = pr.title;
+    document.getElementById('modalPrMeta').innerText = `Ref ID: ${pr.id} | Dept: ${pr.dept} | Target Date: ${pr.date}`;
+    document.getElementById('modalPrBody').innerText = pr.content;
+    document.getElementById('prReviewModal').style.display = 'flex';
+}
+
+function closePrModal() {
+    document.getElementById('prReviewModal').style.display = 'none';
+    activePrId = null;
+}
+
+function updatePrStatus(newStatus) {
+    if (!activePrId) return;
+
+    const pr = pressReleases.find(item => item.id === activePrId);
+    if (pr) {
+        pr.status = newStatus;
+        logAuditEvent(`Set Press Release ${pr.id} status to ${newStatus}`);
+        showToast(`Press Release ${pr.id} set to ${newStatus}!`);
+        renderPressReleases();
+    }
+    closePrModal();
+}
+
+// MODULE 9: GREETING CARDS & OCCASIONS
+function renderOccasions() {
+    let html = `<table><thead><tr><th>Card Ref</th><th>Recipient Dignitary</th><th>Occasion Event</th><th>Status</th></tr></thead><tbody>`;
+    occasionsData.forEach(o => {
+        html += `<tr><td><b>${o.id}</b></td><td>${o.recipient}</td><td>${o.title}</td><td><span class="badge badge-approved">${o.status}</span></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('occasionsTableBox').innerHTML = html;
+}
+
+function openNewOccasionModal() {
+    document.getElementById('occasionModal').style.display = 'flex';
+}
+
+function saveOccasionRecord() {
+    const recipient = document.getElementById('occRecipient').value.trim();
+    const title = document.getElementById('occTitle').value.trim();
+
+    if (!recipient || !title) { showToast('Please enter recipient and occasion!', 'danger'); return; }
+
+    occasionsData.unshift({ id: `CARD-${occasionsData.length + 10}`, recipient, title, status: 'Dispatched' });
+    logAuditEvent(`Dispatched Greeting Card to ${recipient}`);
+    showToast('Official Greeting Card dispatched via Secretariat Protocol!');
+    closeModal('occasionModal');
+    renderOccasions();
+}
+
+// MODULE 10: AUDIT LOG
+function renderAuditLog() {
+    let html = `<table><thead><tr><th>Timestamp</th><th>User / Executive Handle</th><th>Action Executed</th><th>IP Address</th><th>Security Flag</th></tr></thead><tbody>`;
+    auditLogsData.forEach(a => {
+        html += `<tr>
+            <td><code>${a.time}</code></td>
+            <td><b>${a.user}</b></td>
+            <td>${a.action}</td>
+            <td><code>${a.ip}</code></td>
+            <td><span class="badge badge-${a.flag==='Security Alert'?'urgent':'approved'}">${a.flag}</span></td>
+        </tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('auditTableBox').innerHTML = html;
+}
+
+function logAuditEvent(actionText, flag = 'Normal') {
+    const now = new Date().toLocaleString();
+    const user = currentUser ? currentUser.name : 'System';
+    auditLogsData.unshift({ time: now, user, action: actionText, ip: '10.0.1.50', flag });
+}
+
+// CONFIDENTIAL VAULT
+function renderConfidentialVault() {
+    let html = `<table><thead><tr><th>File ID</th><th>Subject</th><th>Classification</th><th>Action</th></tr></thead><tbody>`;
+    filesData.filter(f => f.classification === 'Confidential' || f.classification === 'Secret' || f.classification === 'Top Secret').forEach(f => {
+        html += `<tr><td><b>${f.id}</b></td><td>${f.subject}</td><td><span class="badge badge-confidential">${f.classification}</span></td><td><button class="btn-primary" style="padding:4px 8px; font-size:11px;" onclick="trackFileTimeline('${f.id}')">📍 Track</button></td></tr>`;
+    });
+    html += `</tbody></table>`;
+    document.getElementById('confidentialTableBox').innerHTML = html;
+}
+
+function sendEncryptedMessage() {
+    const rec = document.getElementById('msgRecipient').value;
+    const txt = document.getElementById('msgText').value.trim();
+
+    if (!txt) return;
+
+    const log = document.getElementById('msgLogBox');
+    const time = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+    log.innerHTML += `<div style="margin-bottom:6px;"><strong>[${time}] ${currentUser.name} ➔ ${rec}:</strong> ${txt}</div>`;
+    document.getElementById('msgText').value = '';
+    showToast('Encrypted memo sent!');
+}
+
+// GENERAL UI CONTROLS & UTILITIES
+function openFileModal(fileId) {
+    const f = filesData.find(item => item.id === fileId);
+    if (!f) return;
+    document.getElementById('modalFileNumber').innerText = f.id;
+    document.getElementById('modalFileSubject').innerText = f.subject;
+    document.getElementById('modalGreenNote').innerText = f.greenNote;
+    document.getElementById('fileModal').style.display = 'flex';
+}
+
+function approveFileAction() {
+    logAuditEvent(`Assented & Approved File`);
+    showToast('File approved and signed.');
+    closeModal('fileModal');
+}
+
+function closeModal(id) {
+    document.getElementById(id).style.display = 'none';
+}
+
+function showToast(msg, type = 'success') {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.innerText = msg;
+    if (type === 'danger') toast.style.borderLeftColor = 'var(--danger)';
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), 3500);
+}
+
+function toggleNotifDropdown() {
+    const drop = document.getElementById('notifDropdown');
+    drop.style.display = drop.style.display === 'block' ? 'none' : 'block';
+}
+
+function clearNotifs() {
+    document.getElementById('notifList').innerHTML = '<div class="notif-item">No new notifications.</div>';
+    document.getElementById('notifBadge').innerText = '0';
+}
+
+function setTheme(mode) {
+    if (mode === 'dark') document.body.classList.add('dark-mode');
+    else document.body.classList.remove('dark-mode');
+    showToast(`Switched to ${mode} mode`);
+}
+
+function filterMasterFiles() {
+    const q = document.getElementById('fileSearchInput').value.toLowerCase();
+    const rows = document.querySelectorAll('#filesTableBox tbody tr');
+    rows.forEach(r => {
+        r.style.display = r.innerText.toLowerCase().includes(q) ? '' : 'none';
+    });
+}
+
+function loadUserSettings() {
+    if (!currentUser) return;
+    document.getElementById('settingsPfpPreview').src = currentUser.avatar;
+    document.getElementById('settingsNameInput').value = currentUser.name;
+    document.getElementById('settingsBranchInput').value = currentUser.branch;
+}
+
+function handlePfpUpload(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const imageBase64 = e.target.result;
+        currentUser.avatar = imageBase64;
+        document.getElementById('settingsPfpPreview').src = imageBase64;
+        document.getElementById('userAvatarHeader').src = imageBase64;
+        showToast('Profile picture updated!');
+    };
+    reader.readAsDataURL(file);
+}
+
+function updateProfileDetails() {
+    const newName = document.getElementById('settingsNameInput').value.trim();
+    const newBranch = document.getElementById('settingsBranchInput').value.trim();
+
+    if (!newName || !newBranch) {
+        showToast('Please fill in both name and branch fields.', 'danger');
+        return;
+    }
+
+    currentUser.name = newName;
+    currentUser.branch = newBranch;
+
+    document.getElementById('userDisplayRole').innerText = currentUser.name;
+    document.getElementById('userDisplayBranch').innerText = currentUser.branch;
+
+    showToast('Profile information saved!');
+}
+
+function changePassword() {
+    const currentPass = document.getElementById('settingsCurrentPass').value;
+    const newPass = document.getElementById('settingsNewPass').value;
+
+    if (!currentPass || !newPass) {
+        showToast('Please enter both current and new passwords.', 'danger');
+        return;
+    }
+
+    document.getElementById('settingsCurrentPass').value = '';
+    document.getElementById('settingsNewPass').value = '';
+    showToast('Password updated successfully!');
+}
+
+/* ================= ENHANCED FEATURE ENGINE ================= */
+
+let archiveFilter = 'All';
+let analyticsStatusChart = null;
+let branchChartInst = null;
+
+let archiveData = [
+    { ...filesData.find(f => f.id === 'FILE-2026-802'), archivedOn: '2026-09-10', archiveReason: 'Approved and completed' },
+    {
+        id:'FILE-2026-790', branch:'Admin', subject:'Annual Secretariat Security Review',
+        currentDesk:'Records Archive', classification:'Confidential', status:'Rejected',
+        delays:1, greenNote:'Returned after governance review.', archivedOn:'2026-09-05',
+        archiveReason:'Rejected during final review', trail:[
+            {stage:'Admin Branch',officer:'SO Admin',timestamp:'2026-09-02',action:'Originated',status:'completed',remark:'Initial submission.'},
+            {stage:'Security Review',officer:'Security Officer',timestamp:'2026-09-05',action:'Rejected',status:'completed',remark:'Additional controls required.'}
+        ]
+    }
+].filter(Boolean);
+
+const staffData = [
+    {name:'Hon. Speaker', role:'Speaker', branch:'Executive Office', status:'Available', workload:4},
+    {name:'Secretary General', role:'Secretary General', branch:'Executive Secretariat', status:'In Meeting', workload:7},
+    {name:'Special Secretary', role:'Special Secretary', branch:'Secretariat Admin', status:'Available', workload:5},
+    {name:'JS Admin', role:'Joint Secretary', branch:'Admin Branch', status:'Available', workload:8},
+    {name:'SO Legislation', role:'Section Officer', branch:'Legislation Branch', status:'Busy', workload:6},
+    {name:'DS Finance', role:'Deputy Secretary', branch:'Finance Branch', status:'Available', workload:3},
+    {name:'Security Officer', role:'Security Officer', branch:'Security Wing', status:'Available', workload:2}
+];
+
+const notificationData = [
+    '📍 FILE-2026-801 is awaiting Special Secretary review.',
+    '⚠️ FILE-2026-803 has accumulated 4 routing-delay days.',
+    '🎯 Direction DIR-01 requires attention.',
+    '🔐 Confidential file controls are active.',
+    '🤖 Secretariat AI prototype is ready.'
+];
+
+function filePriority(f) {
+    if (f.status === 'Rejected') return 'Urgent';
+    if (f.delays >= 4) return 'Urgent';
+    if (f.classification === 'Secret' || f.classification === 'Top Secret') return 'High';
+    if (f.status === 'Awaiting Assent') return 'High';
+    if (f.delays >= 2) return 'Normal';
+    return 'Low';
+}
+
+function fileDeadlineStatus(f) {
+    if (f.status === 'Approved' || f.status === 'Rejected') return 'Completed';
+    if (f.delays >= 4) return 'Overdue / At Risk';
+    if (f.delays >= 2) return 'Due Soon';
+    return 'On Track';
+}
+
+function renderTracking() {
+    const urgent = filesData.filter(f => filePriority(f) === 'Urgent').length;
+    const overdue = filesData.filter(f => fileDeadlineStatus(f) === 'Overdue / At Risk').length;
+    const transit = filesData.filter(f => f.status === 'In Transit' || f.status === 'Awaiting Assent').length;
+    const health = filesData.length ? Math.round(filesData.reduce((a,f)=>a + Math.max(50,100-(f.delays*12)),0)/filesData.length) : 0;
+
+    document.getElementById('trackUrgent').innerText = urgent;
+    document.getElementById('trackOverdue').innerText = overdue;
+    document.getElementById('trackTransit').innerText = transit;
+    document.getElementById('trackHealth').innerText = health + '%';
+
+    let rows = `<table><thead><tr><th>File</th><th>Branch</th><th>Current Desk</th><th>Priority</th><th>Deadline</th><th>Progress</th><th>Action</th></tr></thead><tbody>`;
+    [...filesData].sort((a,b)=>({Urgent:0,High:1,Normal:2,Low:3}[filePriority(a)]-({Urgent:0,High:1,Normal:2,Low:3}[filePriority(b)]))).forEach(f => {
+        const p = filePriority(f);
+        const cls = 'priority-' + p.toLowerCase();
+        const progress = Math.min(100, Math.max(15, 100 - f.delays * 15));
+        rows += `<tr>
+            <td><b>${f.id}</b><br><small style="color:var(--text-muted)">${f.subject}</small></td>
+            <td>${f.branch}</td><td>📍 ${f.currentDesk}</td>
+            <td><span class="priority-pill ${cls}">${p}</span></td>
+            <td>${fileDeadlineStatus(f)}</td>
+            <td style="min-width:130px"><div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div><small>${progress}%</small></td>
+            <td><button class="btn-primary" onclick="trackFileTimeline('${f.id}')">Track</button></td>
+        </tr>`;
+    });
+    rows += '</tbody></table>';
+    document.getElementById('trackingTableBox').innerHTML = rows;
+}
+
+function renderArchive() {
+    const box = document.getElementById('archiveTableBox');
+    if (!box) return;
+    const all = archiveData;
+    document.getElementById('archiveTotal').innerText = all.length;
+    document.getElementById('archiveApproved').innerText = all.filter(f=>f.status==='Approved').length;
+    document.getElementById('archiveRejected').innerText = all.filter(f=>f.status==='Rejected').length;
+    document.getElementById('archiveCompleted').innerText = all.length;
+
+    let filtered = archiveFilter === 'All' ? all : all.filter(f=>f.status===archiveFilter);
+    const q = (document.getElementById('archiveSearchInput')?.value || '').toLowerCase();
+    if (q) filtered = filtered.filter(f => `${f.id} ${f.subject} ${f.branch} ${f.status}`.toLowerCase().includes(q));
+
+    let html = `<table><thead><tr><th>File ID</th><th>Branch</th><th>Subject</th><th>Classification</th><th>Final Status</th><th>Archived On</th><th>Action</th></tr></thead><tbody>`;
+    if (!filtered.length) html += `<tr><td colspan="7" style="text-align:center;padding:28px;color:var(--text-muted)">📂 No archived files found.</td></tr>`;
+    filtered.forEach(f=>{
+        const statusClass = f.status === 'Approved' ? 'badge-approved' : 'badge-urgent';
+        html += `<tr><td><b>${f.id}</b></td><td>${f.branch}</td><td>${f.subject}</td>
+        <td><span class="badge badge-${String(f.classification).toLowerCase().replaceAll(' ','')}">${f.classification}</span></td>
+        <td><span class="badge ${statusClass}">${f.status==='Approved'?'✅ Accepted':'❌ Rejected'}</span></td>
+        <td>${f.archivedOn || '—'}</td>
+        <td><button class="btn-secondary" onclick="viewArchivedFile('${f.id}')">👁️ View File</button></td></tr>`;
+    });
+    html += '</tbody></table>';
+    box.innerHTML = html;
+}
+function setArchiveFilter(status){ archiveFilter=status; renderArchive(); }
+function filterArchiveFiles(){ renderArchive(); }
+function viewArchivedFile(id){
+    const f = archiveData.find(x=>x.id===id) || filesData.find(x=>x.id===id);
+    if (!f) return;
+    if (filesData.some(x=>x.id===id)) openFileModal(id);
+    else {
+        currentTrackingFileId = id;
+        document.getElementById('trackFileNumber').innerText=f.id;
+        document.getElementById('trackFileSubject').innerText=f.subject;
+        document.getElementById('trackCurrentDesk').innerText=f.currentDesk;
+        document.getElementById('trackStatusBadge').innerText=f.status;
+        document.getElementById('timelineList').innerHTML=(f.trail||[]).map((s,i)=>`<div class="timeline-item ${s.status}"><div class="timeline-icon">${s.status==='completed'?'✓':i+1}</div><div class="timeline-card"><strong>${s.stage}</strong><div style="font-size:11px;color:var(--primary)">${s.officer} • ${s.action}</div><p style="font-size:11px;color:var(--text-muted)">${s.remark}</p></div></div>`).join('');
+        document.getElementById('trackModal').style.display='flex';
+    }
+}
+
+function renderAnalytics() {
+    const active = filesData.filter(f=>!['Approved','Rejected'].includes(f.status));
+    const completed = filesData.filter(f=>['Approved','Rejected'].includes(f.status)).length;
+    const completion = Math.round((completed / Math.max(filesData.length,1))*100);
+    const attention = filesData.filter(f=>filePriority(f)==='Urgent' || fileDeadlineStatus(f)==='Overdue / At Risk').length;
+    document.getElementById('analyticsCompletion').innerText = completion + '%';
+    document.getElementById('analyticsProgress').style.width = completion + '%';
+    document.getElementById('analyticsAttention').innerText = attention;
+    document.getElementById('analyticsDepartments').innerText = new Set(filesData.map(f=>f.branch)).size;
+    document.getElementById('analyticsAudit').innerText = auditLogsData.length;
+
+    if (analyticsStatusChart) analyticsStatusChart.destroy();
+    if (branchChartInst) branchChartInst.destroy();
+    analyticsStatusChart = new Chart(document.getElementById('analyticsStatusChart').getContext('2d'),{
+        type:'doughnut',
+        data:{labels:['Approved','In Transit','Awaiting Assent','Other'],datasets:[{data:[
+            filesData.filter(f=>f.status==='Approved').length,
+            filesData.filter(f=>f.status==='In Transit').length,
+            filesData.filter(f=>f.status==='Awaiting Assent').length,
+            filesData.filter(f=>!['Approved','In Transit','Awaiting Assent'].includes(f.status)).length
+        ]}]},
+        options:{responsive:true,maintainAspectRatio:false}
+    });
+    const branches=[...new Set(filesData.map(f=>f.branch))];
+    branchChartInst = new Chart(document.getElementById('branchChart').getContext('2d'),{
+        type:'bar',
+        data:{labels:branches,datasets:[{label:'Files',data:branches.map(b=>filesData.filter(f=>f.branch===b).length)}]},
+        options:{responsive:true,maintainAspectRatio:false}
+    });
+}
+function generateExecutiveReport(){
+    const urgent=filesData.filter(f=>filePriority(f)==='Urgent');
+    const approved=filesData.filter(f=>f.status==='Approved').length;
+    const active=filesData.filter(f=>!['Approved','Rejected'].includes(f.status)).length;
+    document.getElementById('executiveReportBox').innerHTML =
+        `<strong>EXECUTIVE SECRETARIAT PERFORMANCE BRIEF</strong><br><br>
+        • Active workflow files: <strong>${active}</strong><br>
+        • Approved/completed files: <strong>${approved}</strong><br>
+        • Urgent cases requiring attention: <strong>${urgent.length}</strong><br>
+        • Highest-risk files: ${urgent.map(f=>f.id).join(', ') || 'None'}<br>
+        • Audit events recorded: <strong>${auditLogsData.length}</strong><br>
+        • Report generated: ${new Date().toLocaleString()}`;
+    logAuditEvent('Generated Executive Analytics Report');
+    showToast('Executive report generated.');
+}
+
+function renderStaff(){
+    const q=(document.getElementById('staffSearch')?.value||'').toLowerCase();
+    const list=staffData.filter(s=>`${s.name} ${s.role} ${s.branch}`.toLowerCase().includes(q));
+    document.getElementById('staffTableBox').innerHTML=`<table><thead><tr><th>Officer</th><th>Role</th><th>Branch</th><th>Availability</th><th>Workload</th><th>Profile</th></tr></thead><tbody>`+
+    list.map(s=>`<tr><td><b>${s.name}</b></td><td>${s.role}</td><td>${s.branch}</td><td><span class="status-dot ${s.status==='Busy'?'danger':s.status==='In Meeting'?'warn':''}"></span>${s.status}</td><td><div class="progress-track"><div class="progress-fill" style="width:${Math.min(s.workload*10,100)}%"></div></div><small>${s.workload} active items</small></td><td><button class="btn-secondary" onclick="showToast('Staff profile: ${s.name}')">View</button></td></tr>`).join('')+'</tbody></table>';
+}
+
+function populateAIFileSelect(){
+    const sel=document.getElementById('aiFileSelect');
+    if(!sel)return;
+    sel.innerHTML=filesData.map(f=>`<option value="${f.id}">${f.id} — ${f.subject}</option>`).join('');
+    summariseSelectedFile();
+}
+function summariseSelectedFile(){
+    const id=document.getElementById('aiFileSelect')?.value;
+    const f=filesData.find(x=>x.id===id);
+    if(!f)return;
+    const progress=Math.min(100,Math.max(15,100-f.delays*15));
+    document.getElementById('aiSummaryBox').innerHTML=
+        `<strong>${f.id} — ${f.subject}</strong><br><br>
+        <b>Branch:</b> ${f.branch}<br>
+        <b>Current desk:</b> ${f.currentDesk}<br>
+        <b>Status:</b> ${f.status}<br>
+        <b>Priority:</b> ${filePriority(f)}<br>
+        <b>Workflow health:</b> ${progress}%<br><br>
+        <b>AI summary:</b> This file is currently ${f.status.toLowerCase()} at the ${f.currentDesk} desk. ${f.greenNote}`;
+    document.getElementById('aiRecommendations').innerHTML=[
+        f.delays>=3?'Escalate the file because routing delay is high.':'Maintain normal monitoring.',
+        f.status==='In Transit'?'Confirm receipt at the destination desk.':'Review the latest recorded decision.',
+        f.classification!=='Public'?'Apply classification-aware access controls.':'Standard access controls are sufficient.'
+    ].map(x=>`<li>${x}</li>`).join('');
+}
+function aiResponse(q){
+    const s=q.toLowerCase();
+    if(s.includes('urgent')) {
+        const u=filesData.filter(f=>filePriority(f)==='Urgent');
+        return u.length?`I found <strong>${u.length}</strong> urgent case(s): ${u.map(f=>f.id+' ('+f.subject+')').join(', ')}.`:'There are no urgent files right now.';
+    }
+    if(s.includes('branch')||s.includes('workload')){
+        const counts={}; filesData.forEach(f=>counts[f.branch]=(counts[f.branch]||0)+1);
+        return 'Current branch workload: '+Object.entries(counts).map(([k,v])=>`<strong>${k}</strong> ${v}`).join(' • ');
+    }
+    if(s.includes('summar')) return `There are <strong>${filesData.length}</strong> tracked files. ${filesData.filter(f=>f.status==='In Transit').length} are in transit and ${filesData.filter(f=>f.status==='Approved').length} are approved.`;
+    if(s.includes('brief')) return `Executive briefing: <strong>${filesData.filter(f=>!['Approved','Rejected'].includes(f.status)).length}</strong> active files, <strong>${filesData.filter(f=>filePriority(f)==='Urgent').length}</strong> urgent cases, and <strong>${directionsData.length}</strong> active directions.`;
+    return `I can help with files, routing, priorities, branch workload, security and executive briefings. Try asking “Which files are urgent?”`;
+}
+function askAI(q){
+    const box=document.getElementById('aiChatBox');
+    box.innerHTML+=`<div class="ai-msg user">${q}</div><div class="ai-msg bot">${aiResponse(q)}</div>`;
+    box.scrollTop=box.scrollHeight;
+}
+function sendAIMessage(){
+    const input=document.getElementById('aiInput'); const q=input.value.trim();
+    if(!q)return; askAI(q); input.value='';
+}
+
+function renderSecurity(){
+    const checks=[
+        ['MFA / identity controls','PASS'],
+        ['Confidential file access','PASS'],
+        ['Audit logging','PASS'],
+        ['Remote signature controls','PASS'],
+        ['Overdue workflow monitoring','REVIEW']
+    ];
+    document.getElementById('securityChecks').innerHTML=checks.map(c=>`<div style="display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid var(--border)"><span>${c[0]}</span><span class="badge ${c[1]==='PASS'?'badge-approved':'badge-pending'}">${c[1]}</span></div>`).join('');
+    document.getElementById('securityEvents').innerHTML=auditLogsData.slice(0,8).map(a=>`<div style="padding:9px 0;border-bottom:1px solid var(--border);font-size:11px"><b>${a.action}</b><br><span style="color:var(--text-muted)">${a.time} • ${a.user} • ${a.flag}</span></div>`).join('');
+}
+function simulateSecurityAlert(){
+    auditLogsData.unshift({time:new Date().toLocaleString(),user:currentUser?.name||'System',action:'Security Centre test alert generated',ip:'10.0.1.50',flag:'Security Alert'});
+    renderSecurity(); renderAuditLog();
+    document.getElementById('securityScore').innerText='78';
+    document.getElementById('securityLabel').innerText='REVIEW • Security alert requires acknowledgement';
+    document.getElementById('securityLabel').style.color='var(--danger)';
+    showToast('Security alert simulated.', 'danger');
+}
+
+function globalSearch(q){
+    const box=document.getElementById('globalSearchResults');
+    if(!box)return;
+    q=q.trim().toLowerCase();
+    if(!q){box.style.display='none';return;}
+    const results=[];
+    filesData.filter(f=>`${f.id} ${f.subject} ${f.branch} ${f.currentDesk}`.toLowerCase().includes(q)).slice(0,5).forEach(f=>results.push({title:f.id,sub:f.subject,action:()=>trackFileTimeline(f.id)}));
+    staffData.filter(s=>`${s.name} ${s.role} ${s.branch}`.toLowerCase().includes(q)).slice(0,3).forEach(s=>results.push({title:s.name,sub:`${s.role} • ${s.branch}`,action:()=>switchTab('staff')}));
+    if(!results.length) results.push({title:'No results',sub:'Try a file ID, subject, officer or branch',action:()=>{}});
+    box.innerHTML=results.map((r,i)=>`<div class="global-search-result" data-search-index="${i}"><b>${r.title}</b><br><small style="color:var(--text-muted)">${r.sub}</small></div>`).join('');
+    box.querySelectorAll('.global-search-result').forEach((el,i)=>el.onclick=()=>{results[i].action();box.style.display='none';});
+    box.style.display='block';
+}
+
+/* Extend existing navigation/rendering without changing original modules */
+const originalSwitchTab = switchTab;
+switchTab = function(tabId){
+    originalSwitchTab(tabId);
+    if(tabId==='tracking') renderTracking();
+    if(tabId==='archive') renderArchive();
+    if(tabId==='analytics') renderAnalytics();
+    if(tabId==='staff') renderStaff();
+    if(tabId==='ai') { populateAIFileSelect(); }
+    if(tabId==='security') renderSecurity();
+};
+
+const originalInitPortal = initPortal;
+initPortal = function(){
+    originalInitPortal();
+    renderTracking();
+    renderArchive();
+    renderAnalytics();
+    renderStaff();
+    populateAIFileSelect();
+    renderSecurity();
+    const list=document.getElementById('notifList');
+    if(list) list.innerHTML=notificationData.map(n=>`<div class="notif-item">${n}</div>`).join('');
+    const badge=document.getElementById('notifBadge');
+    if(badge) badge.innerText=notificationData.length;
+};
+
+/* Upgrade approval so it actually changes the file state and feeds the archive */
+const originalApproveFileAction = approveFileAction;
+approveFileAction = function(){
+    if(typeof currentTrackingFileId !== 'undefined' && currentTrackingFileId){
+        const f=filesData.find(x=>x.id===currentTrackingFileId);
+        if(f){
+            f.status='Approved';
+            f.currentDesk='Records Archive';
+            f.trail.forEach(t=>{if(t.status==='current')t.status='completed';});
+            f.trail.push({stage:'Records Archive',officer:currentUser?.name||'Executive Office',timestamp:new Date().toLocaleString(),action:'Approved & Archived',status:'completed',remark:'Digitally approved and moved to archive.'});
+            if(!archiveData.some(x=>x.id===f.id)) archiveData.unshift({...f,archivedOn:new Date().toISOString().slice(0,10),archiveReason:'Approved and completed'});
+            logAuditEvent(`Approved and archived File ${f.id}`);
+            renderDashboard(); renderMasterFiles(); renderInbox(); renderTracking(); renderArchive(); renderAnalytics(); renderConfidentialVault();
+            closeModal('fileModal');
+            showToast(`${f.id} approved and moved to Archive.`);
+            return;
+        }
+    }
+    originalApproveFileAction();
+};
+
+/* Keep archive/dashboard figures refreshed after routing */
+const originalDispatch = dispatchFileToNextStage;
+dispatchFileToNextStage = function(){
+    originalDispatch();
+    renderTracking();
+    renderAnalytics();
+    renderArchive();
+};
+
+
+/* ================= CONFIDENTIAL VAULT LOCK =================
+   Prototype credentials for demonstration:
+   Username: admin
+   Password: Admin@123
+   Change these values in confidentialCredentials if required.
+============================================================= */
+
+const confidentialCredentials = {
+    username: 'admin',
+    password: 'Admin@123'
+};
+
+let confidentialAuthenticated = false;
+
+function openConfidentialVault() {
+    if (confidentialAuthenticated) {
+        switchTab('confidential');
+        return;
+    }
+
+    const lock = document.getElementById('confidentialLockScreen');
+    const user = document.getElementById('confidentialUsername');
+    const pass = document.getElementById('confidentialPassword');
+    const error = document.getElementById('confidentialLoginError');
+
+    if (!lock) {
+        switchTab('confidential');
+        return;
+    }
+
+    user.value = '';
+    pass.value = '';
+    error.style.display = 'none';
+    error.innerText = '';
+    lock.style.display = 'flex';
+
+    setTimeout(() => user.focus(), 100);
+}
+
+function authenticateConfidentialVault() {
+    const username = document.getElementById('confidentialUsername').value.trim();
+    const password = document.getElementById('confidentialPassword').value;
+    const error = document.getElementById('confidentialLoginError');
+
+    if (username === confidentialCredentials.username &&
+        password === confidentialCredentials.password) {
+
+        confidentialAuthenticated = true;
+        document.getElementById('confidentialLockScreen').style.display = 'none';
+
+        if (typeof logAuditEvent === 'function') {
+            logAuditEvent('Authenticated access to Confidential File Vault');
+        }
+
+        switchTab('confidential');
+
+        if (typeof showToast === 'function') {
+            showToast('Confidential Vault access granted.');
+        }
+    } else {
+        error.innerText = '❌ Invalid username or password. Access denied.';
+        error.style.display = 'block';
+
+        if (typeof logAuditEvent === 'function') {
+            logAuditEvent('Failed Confidential Vault authentication attempt');
+        }
+
+        if (typeof showToast === 'function') {
+            showToast('Confidential Vault authentication failed.', 'danger');
+        }
+    }
+}
+
+function closeConfidentialLock() {
+    const lock = document.getElementById('confidentialLockScreen');
+    if (lock) lock.style.display = 'none';
+}
+
+/* Automatically require authentication again after leaving the vault. */
+const originalSwitchTabWithConfidentialProtection = switchTab;
+switchTab = function(tabId) {
+    if (tabId === 'confidential' && !confidentialAuthenticated) {
+        openConfidentialVault();
+        return;
+    }
+
+    originalSwitchTabWithConfidentialProtection(tabId);
+
+    /* Lock the vault again whenever the user navigates away from it. */
+    if (tabId !== 'confidential' && confidentialAuthenticated) {
+        confidentialAuthenticated = false;
+    }
+};
+
+</script>
+</body>
+</html>
